@@ -1,0 +1,315 @@
+@import "tailwindcss";
+
+/* ─── Brand palette: Deep Teal #0A9696 → Bright Teal #0DC8C8 ────────────────
+   Ocean-authentic teal. Replaces the previous blue gradient throughout.       */
+
+/* ─── Tailwind v4 theme tokens ──────────────────────────────────────────────── */
+@theme {
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  --color-tide-hw:     #f59e0b;
+  --color-tide-lw:     #38bdf8;
+  --color-brand-start: #0A9696;
+  --color-brand-end:   #0DC8C8;
+  --color-tide-navy:   #020D0D;
+}
+
+/* ─── CSS Variables — Dark (default) ───────────────────────────────────────── */
+:root,
+:root[data-theme='dark'] {
+  --bg-page:       #020D0D;
+  --bg-surface:    #051515;
+  --bg-card:       rgba(4, 18, 18, 0.85);
+  --bg-card-hover: rgba(6, 24, 24, 0.97);
+  --border:        rgba(10, 150, 150, 0.18);
+  --border-accent: rgba(13, 200, 200, 0.34);
+
+  --text-primary:   #CFF0F0;
+  --text-secondary: #7ACFCF;
+  --text-muted:     #3A7070;
+
+  /* Teal brand anchors (replacing blue) */
+  --accent-blue:  #0A9696;
+  --accent-cyan:  #0DC8C8;
+  --accent-hw:    #f59e0b;
+  --accent-lw:    #38bdf8;
+  --accent-green: #34d399;
+
+  --glass-bg:     rgba(4, 18, 18, 0.70);
+  --glass-border: rgba(10, 150, 150, 0.22);
+  --glass-shadow: 0 8px 32px rgba(0, 4, 4, 0.72);
+
+  --brand-gradient:        linear-gradient(135deg, #0A9696, #0DC8C8);
+  --brand-gradient-subtle: linear-gradient(135deg, rgba(10,150,150,0.15), rgba(13,200,200,0.08));
+}
+
+/* ─── CSS Variables — Light ─────────────────────────────────────────────────── */
+:root[data-theme='light'] {
+  --bg-page:       #EDF9F9;
+  --bg-surface:    #FFFFFF;
+  --bg-card:       rgba(255, 255, 255, 0.96);
+  --bg-card-hover: rgba(220, 248, 248, 1.00);
+  --border:        rgba(10, 150, 150, 0.16);
+  --border-accent: rgba(10, 150, 150, 0.38);
+
+  --text-primary:   #021414;
+  --text-secondary: #1A5858;
+  --text-muted:     #4A7878;
+
+  /* Deeper teal for light-bg readability */
+  --accent-blue:  #0A7C7C;
+  --accent-cyan:  #0898A8;
+  --accent-hw:    #c97706;
+  --accent-lw:    #0284c7;
+  --accent-green: #059669;
+
+  --glass-bg:     rgba(215, 245, 245, 0.85);
+  --glass-border: rgba(10, 150, 150, 0.22);
+  --glass-shadow: 0 8px 32px rgba(0, 80, 80, 0.10);
+
+  --brand-gradient:        linear-gradient(135deg, #0A7C7C, #0898A8);
+  --brand-gradient-subtle: linear-gradient(135deg, rgba(10,124,124,0.10), rgba(8,152,168,0.06));
+}
+
+/* ─── Base ──────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg-page);
+  color: var(--text-primary);
+  min-height: 100vh;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Light mode — pale teal gradient page wash */
+:root[data-theme='light'] body {
+  background: linear-gradient(175deg, #D4F3F3 0%, #EDF9F9 40%, #F5FDFD 100%);
+  background-attachment: fixed;
+}
+
+/* ─── Layout ────────────────────────────────────────────────────────────────── */
+.container-tp {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ─── Glass Card ────────────────────────────────────────────────────────────── */
+.glass-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: var(--glass-shadow);
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.glass-card:hover {
+  border-color: var(--border-accent);
+  background: var(--bg-card-hover);
+}
+
+/* ─── Navbar Glass ──────────────────────────────────────────────────────────── */
+.navbar-glass {
+  background: var(--glass-bg);
+  border-bottom: 1px solid var(--glass-border);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+/* Light mode navbar: same dark teal glass as dark mode */
+:root[data-theme='light'] .navbar-glass {
+  background: rgba(4, 18, 18, 0.92);
+  border-bottom: 1px solid rgba(10, 150, 150, 0.28);
+}
+
+/* Force dark-mode colour tokens inside the navbar regardless of page theme.
+   Apply this class to the <header> so all var(--*) references resolve to
+   the dark palette — keeps logo, links, and icons readable on dark glass. */
+.navbar-forced-dark {
+  --text-primary:   #CFF0F0;
+  --text-secondary: #7ACFCF;
+  --text-muted:     #3A7070;
+  --accent-blue:    #0A9696;
+  --accent-cyan:    #0DC8C8;
+  --bg-card:        rgba(4, 18, 18, 0.85);
+  --border:         rgba(10, 150, 150, 0.18);
+  --border-accent:  rgba(13, 200, 200, 0.34);
+}
+
+/* ─── HW / LW badges ────────────────────────────────────────────────────────── */
+.hw-badge {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.30);
+  color: var(--accent-hw);
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.lw-badge {
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.30);
+  color: var(--accent-lw);
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.source-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, rgba(10,150,150,0.12), rgba(13,200,200,0.07));
+  border: 1px solid rgba(13, 200, 200, 0.30);
+  color: var(--accent-cyan);
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+/* ─── Buttons ───────────────────────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--brand-gradient);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 8px 20px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+  text-decoration: none;
+  box-shadow: 0 2px 12px rgba(10, 150, 150, 0.32);
+}
+.btn-primary:hover { opacity: 0.88; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(10, 150, 150, 0.42); }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  text-decoration: none;
+}
+.btn-ghost:hover { border-color: var(--border-accent); color: var(--text-primary); }
+
+/* ─── Section tag ───────────────────────────────────────────────────────────── */
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(10, 150, 150, 0.12);
+  border: 1px solid rgba(13, 200, 200, 0.30);
+}
+
+/* ─── Gradient text — teal ──────────────────────────────────────────────────── */
+.text-gradient {
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Light mode: darker teal for contrast on white backgrounds */
+:root[data-theme='light'] .text-gradient {
+  background: linear-gradient(135deg, #0A5F5F, #0A9090);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Hero-specific gradient text — always white/bright regardless of theme.
+   Use .hero-gradient-text inside .ocean-bg sections only.                */
+.hero-gradient-text {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(220,255,255,0.90) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Ocean hero bg ─────────────────────────────────────────────────────────── */
+@keyframes waveShift {
+  0%   { background-position: 0% 60%; }
+  50%  { background-position: 100% 40%; }
+  100% { background-position: 0% 60%; }
+}
+
+.ocean-bg {
+  background: linear-gradient(
+    160deg,
+    #020A0A 0%,
+    #031212 20%,
+    #051C1C 40%,
+    #072828 60%,
+    #051C1C 80%,
+    #020A0A 100%
+  );
+  background-size: 400% 400%;
+  animation: waveShift 20s ease infinite;
+}
+
+:root[data-theme='dark'] .ocean-bg {
+  background: linear-gradient(
+    160deg,
+    #020A0A 0%,
+    #031414 20%,
+    #062020 40%,
+    #082C2C 55%,
+    #062020 75%,
+    #020A0A 100%
+  );
+  background-size: 400% 400%;
+  animation: waveShift 20s ease infinite;
+}
+
+/* Light mode: same deep teal as dark mode — hero always dark */
+:root[data-theme='light'] .ocean-bg {
+  background: linear-gradient(
+    160deg,
+    #020A0A 0%,
+    #031414 20%,
+    #062020 40%,
+    #082C2C 55%,
+    #062020 75%,
+    #020A0A 100%
+  );
+  background-size: 400% 400%;
+  animation: waveShift 20s ease infinite;
+}
+
+/* ─── Scrollbar ─────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-page); }
+::-webkit-scrollbar-thumb { background: var(--border-accent); border-radius: 3px; }
