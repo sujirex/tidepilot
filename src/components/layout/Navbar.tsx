@@ -37,6 +37,7 @@ const NAV_LINKS = [
   { href: '/annual',     label: 'Annual'    },
   { href: '/compare',    label: 'Compare'   },
   { href: '/reminders',  label: 'Reminders' },
+  { href: '/guide',      label: 'Guide'     },
 ]
 
 export default function Navbar() {
