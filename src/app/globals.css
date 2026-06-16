@@ -5,7 +5,7 @@
 
 /* ─── Tailwind v4 theme tokens ──────────────────────────────────────────────── */
 @theme {
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-display: 'Roboto', system-ui, sans-serif;
   --font-mono:    'JetBrains Mono', monospace;
 
   --color-tide-hw:     #f59e0b;
@@ -81,7 +81,7 @@ body {
   background: var(--bg-page);
   color: var(--text-primary);
   min-height: 100vh;
-  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-family: 'Roboto', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   transition: background 0.3s, color 0.3s;
 }
