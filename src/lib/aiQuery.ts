@@ -29,14 +29,16 @@ import {
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 export type Intent =
-  | 'high_tide'   // user wants HW info
-  | 'low_tide'    // user wants LW info
-  | 'current'     // tide right now / at a specific time
-  | 'schedule'    // full day HW/LW schedule
-  | 'safe'        // is it safe to navigate / enter port?
-  | 'phase'       // spring or neap?
-  | 'range'       // tidal range for the day
-  | 'unknown'     // fallback — show full schedule
+  | 'high_tide'    // user wants HW info
+  | 'low_tide'     // user wants LW info
+  | 'current'      // tide right now / at a specific time
+  | 'schedule'     // full day HW/LW schedule
+  | 'safe'         // is it safe to navigate / enter port?
+  | 'phase'        // spring or neap?
+  | 'range'        // tidal range for the day
+  | 'out_of_scope' // weather, flood warnings, storms — not tide data
+  | 'need_port'    // user asked a tide question but no port mentioned
+  | 'unknown'      // fallback — show full schedule
 
 export interface ParsedQuery {
   port:   Port
@@ -246,17 +248,33 @@ function extractHour(q: string): number | null {
 
 // ── Intent extraction ─────────────────────────────────────────────────────────
 
+/** Keywords that are completely outside TidePilot's scope */
+const OUT_OF_SCOPE_PATTERNS = [
+  /\b(flood warning|flood alert|flood risk|flooding)\b/,
+  /\b(storm warning|storm surge|cyclone|hurricane|typhoon)\b/,
+  /\b(weather|rainfall|rain|wind speed|wave height|swell|tsunami)\b/,
+  /\b(port activities|ship traffic|vessel traffic|cargo|berthing availability)\b/,
+  /\b(accident|incident|collision|stranding|grounding)\b/,
+  /\b(forecast|prediction|climate|temperature|humidity)\b/,
+  /\b(news|alert|warning|advisory)\b/,
+]
+
 function extractIntent(q: string): Intent {
   const n = q.toLowerCase()
 
-  if (n.match(/\b(high water|high tide|hw|high\s*water)\b/))          return 'high_tide'
-  if (n.match(/\b(low water|low tide|lw|low\s*water)\b/))             return 'low_tide'
+  // Out-of-scope check first
+  for (const pattern of OUT_OF_SCOPE_PATTERNS) {
+    if (pattern.test(n)) return 'out_of_scope'
+  }
+
+  if (n.match(/\b(high water|high tide|hw|high\s*water)\b/))             return 'high_tide'
+  if (n.match(/\b(low water|low tide|lw|low\s*water)\b/))                return 'low_tide'
   if (n.match(/\b(safe|enter|berth|navigate|vessel|draft|clearance)\b/)) return 'safe'
-  if (n.match(/\b(spring|neap|phase|lunar|moon)\b/))                  return 'phase'
-  if (n.match(/\b(range|difference|rise|fall|between)\b/))            return 'range'
-  if (n.match(/\b(schedule|all|full day|times|list|today\'?s?)\b/))   return 'schedule'
-  if (n.match(/\b(now|current|right now|at the moment)\b/))           return 'current'
-  if (n.match(/\b(height|level|depth|meter|metre|reading)\b/))        return 'current'
+  if (n.match(/\b(spring|neap|phase|lunar|moon)\b/))                     return 'phase'
+  if (n.match(/\b(range|difference|rise|fall|between)\b/))               return 'range'
+  if (n.match(/\b(schedule|all|full day|times|list|today\'?s?)\b/))      return 'schedule'
+  if (n.match(/\b(now|current|right now|at the moment)\b/))              return 'current'
+  if (n.match(/\b(height|level|depth|meter|metre|reading)\b/))           return 'current'
 
   return 'schedule'  // default: show full day schedule
 }
@@ -519,6 +537,35 @@ function buildRangeResponse(port: Port, date: Date): string {
 
 // ── Fallback for unrecognised queries ─────────────────────────────────────────
 
+function buildOutOfScopeResponse(raw: string): string {
+  return [
+    "I can only answer questions about tidal data for Indian ports.",
+    '',
+    '⚠️ For flood warnings, storm alerts, weather, and port operations, please check:',
+    '• INCOIS Ocean Services — incois.gov.in',
+    '• IMD Weather Warnings — mausam.imd.gov.in',
+    '• Indian Coast Guard — indiancoastguard.gov.in',
+    '',
+    'What I CAN help you with:',
+    '• "High tide at Kandla tomorrow morning?"',
+    '• "Is it safe to enter Hazira at 6am?"',
+    '• "Spring or neap at Mumbai today?"',
+    '• "Tide schedule for Dahej this week"',
+  ].join('\n')
+}
+
+function buildNeedPortResponse(): string {
+  const portList = PORTS.map(p => p.name).join(', ')
+  return [
+    "Which port are you asking about?",
+    '',
+    'I cover 12 major Indian ports:',
+    portList,
+    '',
+    'Try: "High tide at [port name] today"',
+  ].join('\n')
+}
+
 function buildUnknownResponse(): string {
   return [
     "I didn't quite understand that. Try asking:",
@@ -531,31 +578,47 @@ function buildUnknownResponse(): string {
   ].join('\n')
 }
 
+
 // ── Main export ───────────────────────────────────────────────────────────────
 
-/**
- * Parse a natural language tide query and return an AI response.
- *
- * @param raw   The user's plain-text question
- * @returns     AIResponse with formatted answer text and metadata
- */
+/** Returns true if the user explicitly named a port in their query */
+function portMentioned(q: string): boolean {
+  const norm = q.toLowerCase().replace(/[^a-z0-9\s]/g, ' ')
+  const aliasKeys = Object.keys(PORT_ALIASES)
+  if (aliasKeys.some(a => norm.includes(a))) return true
+  if (PORTS.some(p => norm.includes(p.name.toLowerCase()))) return true
+  return false
+}
+
 export function answerQuery(raw: string): AIResponse {
+  const defaultPort = PORTS.find(p => p.id === DEFAULT_PORT_ID)!
+  const today       = todayUTCMidnight()
+
   if (!raw.trim()) {
-    return {
-      answer: buildUnknownResponse(),
-      port:   PORTS.find(p => p.id === DEFAULT_PORT_ID)!,
-      date:   todayUTCMidnight(),
-    }
+    return { answer: buildUnknownResponse(), port: defaultPort, date: today }
   }
 
   const q      = raw.toLowerCase()
-  const port   = extractPort(q)
-  const date   = extractDate(q)
-  const hour   = extractHour(q)
   const intent = extractIntent(q)
 
-  let answer: string
+  if (intent === 'out_of_scope') {
+    return { answer: buildOutOfScopeResponse(raw), port: defaultPort, date: today }
+  }
 
+  const hasTideKeyword = /\b(tide|tidal|hw|lw|high water|low water|water level|height|safe|spring|neap|range|schedule|berth|navigate|enter)\b/.test(q)
+  if (!portMentioned(q) && hasTideKeyword) {
+    return { answer: buildNeedPortResponse(), port: defaultPort, date: today }
+  }
+
+  if (!portMentioned(q) && !hasTideKeyword) {
+    return { answer: buildUnknownResponse(), port: defaultPort, date: today }
+  }
+
+  const port = extractPort(q)
+  const date = extractDate(q)
+  const hour = extractHour(q)
+
+  let answer: string
   switch (intent) {
     case 'high_tide': answer = buildHighTideResponse(port, date, hour);  break
     case 'low_tide':  answer = buildLowTideResponse(port, date, hour);   break
@@ -570,7 +633,6 @@ export function answerQuery(raw: string): AIResponse {
   return { answer, port, date }
 }
 
-/** Suggested starter queries shown as quick-tap chips in the chat UI */
 export const SUGGESTED_QUERIES = [
   'Tide schedule at Dahej today',
   'High tide at Kandla tomorrow morning',

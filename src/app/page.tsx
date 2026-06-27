@@ -780,20 +780,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── TidePilot AI floating chat ───────────────────────────────────── */}
+      {/* TidePilot AI floating chat */}
       <TideChat />
 
-      {/* ── Footer ────────────────────────────────────────────────────────── */}
+      {/* Footer */}
       <footer className="py-8 mt-8" style={{ borderTop: '1px solid var(--border)' }}>
         <div className="container-tp text-center text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
-          <p>TidePilot · Harmonic tide predictions for Indian ports</p>
+          <p>TidePilot &middot; Harmonic tide predictions for Indian ports</p>
           <p className="mt-1">
             Built by{' '}
             <a href="https://sujikumar.com" target="_blank" rel="noopener noreferrer"
               style={{ color: 'var(--accent-cyan)' }}>
               Suji Kumar C
             </a>
-            {' '}· Data: ATT Vol. 4 · NHO India · TPXO9
+            {' '}&middot; Data: ATT Vol. 4 &middot; NHO India &middot; TPXO9
           </p>
           <p className="mt-1 text-[10px]" style={{ color: 'var(--text-muted)', opacity: 0.6 }}>
             For navigation purposes, always verify against official NHO India Tide Tables.

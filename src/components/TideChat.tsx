@@ -353,7 +353,7 @@ export default function TideChat() {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKey}
-              placeholder="Ask about any Indian port tide…"
+              placeholder="Ask about any Indian port tide..."
               disabled={thinking}
               style={{
                 flex: 1,
@@ -389,7 +389,7 @@ export default function TideChat() {
                 flexShrink: 0,
               }}
             >
-              ➤
+              &#x27A4;
             </button>
           </div>
         </div>
