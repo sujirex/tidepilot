@@ -17,7 +17,7 @@
  *   g_n  = local phase lag (published in tide tables)
  */
 
-export const CONSTITUENT_NAMES = ['M2', 'S2', 'N2', 'K2', 'K1', 'O1', 'P1', 'Q1'] as const
+export const CONSTITUENT_NAMES = ['M2', 'S2', 'N2', 'K2', 'K1', 'O1', 'P1', 'Q1', 'M4', 'MS4', 'SA'] as const
 export type ConstituentName = (typeof CONSTITUENT_NAMES)[number]
 
 /** Angular speed of each constituent in degrees per hour */
@@ -29,7 +29,10 @@ const SPEEDS: Record<ConstituentName, number> = {
   K1: 15.041069,
   O1: 13.943036,
   P1: 14.958931,
-  Q1: 13.398661,
+  Q1:  13.398661,
+  M4:  57.968208,   // 2 x M2: shallow-water overtide
+  MS4: 58.984104,   // M2 + S2: compound
+  SA:   0.041067,   // solar annual: seasonal MSL
 }
 
 /** Days since J2000 (1 Jan 2000 00:00 UTC) */
@@ -62,6 +65,9 @@ function equilibriumArgs(d: number): Record<ConstituentName, number> {
     O1:  w(h - 2 * s - 90),
     P1:  w(-h + 270),
     Q1:  w(h - 3 * s + p - 90),
+    M4:  w(4 * h - 4 * s),        // 2 x V0(M2)
+    MS4: w(2 * h - 2 * s),        // V0(M2) + V0(S2)
+    SA:  w(h),                     // sun's mean longitude
   }
 }
 
@@ -76,7 +82,10 @@ function nodalF(N: number): Record<ConstituentName, number> {
     K1: 1.006 + 0.115 * Math.cos(Nr) - 0.009 * Math.cos(2 * Nr),
     O1: 1.009 + 0.187 * Math.cos(Nr) - 0.015 * Math.cos(2 * Nr),
     P1: 1.000,
-    Q1: 1.009 + 0.187 * Math.cos(Nr) - 0.015 * Math.cos(2 * Nr),
+    Q1:  1.009 + 0.187 * Math.cos(Nr) - 0.015 * Math.cos(2 * Nr),
+    M4:  (1.000 - 0.037 * Math.cos(Nr)) * (1.000 - 0.037 * Math.cos(Nr)),
+    MS4: 1.000 - 0.037 * Math.cos(Nr),
+    SA:  1.000,
   }
 }
 
@@ -92,6 +101,9 @@ function nodalU(N: number): Record<ConstituentName, number> {
     O1:  10.8 * Math.sin(Nr) - 1.3 * Math.sin(2 * Nr),
     P1:  0,
     Q1:  10.8 * Math.sin(Nr) - 1.3 * Math.sin(2 * Nr),
+    M4:  -4.2 * Math.sin(Nr),
+    MS4: -2.1 * Math.sin(Nr),
+    SA:  0,
   }
 }
 
@@ -111,7 +123,10 @@ export interface PortConstituents {
   K1: ConstituentData
   O1: ConstituentData
   P1: ConstituentData
-  Q1: ConstituentData
+  Q1:  ConstituentData
+  M4:  ConstituentData   // shallow-water overtide
+  MS4: ConstituentData   // compound M2+S2
+  SA:  ConstituentData   // solar annual (seasonal MSL)
 }
 
 export interface TidePoint {
