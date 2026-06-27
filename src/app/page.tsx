@@ -16,6 +16,7 @@ import {
 } from '@/lib/tideEngine'
 import { useTheme } from '@/context/ThemeContext'
 import { loadReminders, countdownLabel, getEventType, todayISTStr, type Reminder } from '@/lib/reminders'
+import TideChat from '@/components/TideChat'
 
 const PORT_SOURCE_LABEL: Record<string, string> = {
   direct:          'Harmonic (ATT/NHO)',
@@ -743,6 +744,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── TidePilot AI floating chat ───────────────────────────────────── */}
+      <TideChat />
 
       {/* ── Footer ────────────────────────────────────────────────────────── */}
       <footer className="py-8 mt-8" style={{ borderTop: '1px solid var(--border)' }}>
