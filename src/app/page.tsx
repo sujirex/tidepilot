@@ -367,6 +367,41 @@ export default function HomePage() {
           <p className="text-xs font-mono" style={{ color: 'rgba(255,255,255,0.58)' }}>
             NHO Official · TPXO9 Global Model · Admiralty Tide Tables
           </p>
+
+          {/* AI feature badge */}
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              marginTop: 18,
+              padding: '8px 16px',
+              borderRadius: 24,
+              background: 'rgba(13, 200, 200, 0.15)',
+              border: '1px solid rgba(13, 200, 200, 0.45)',
+              cursor: 'pointer',
+              backdropFilter: 'blur(8px)',
+            }}
+          >
+            <span style={{ fontSize: '1rem' }}>🤖</span>
+            <div>
+              <span style={{
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                color: '#0DC8C8',
+                letterSpacing: '0.03em',
+              }}>
+                Free AI — Ask anything in plain English
+              </span>
+              <span style={{
+                fontSize: '0.72rem',
+                color: 'rgba(255,255,255,0.55)',
+                marginLeft: 8,
+              }}>
+                "High tide at Kandla tomorrow?" · Tap 🌊 below →
+              </span>
+            </div>
+          </div>
         </div>
       </section>
 

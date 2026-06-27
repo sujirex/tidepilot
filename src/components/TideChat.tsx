@@ -147,39 +147,93 @@ export default function TideChat() {
 
   return (
     <>
-      {/* ── Floating button ──────────────────────────────────────────────── */}
-      <button
-        onClick={() => setOpen(o => !o)}
-        aria-label={open ? 'Close AI chat' : 'Open AI chat'}
-        style={{
-          position: 'fixed',
-          bottom: 24,
-          right: 24,
-          zIndex: 1000,
-          width: 56,
-          height: 56,
-          borderRadius: '50%',
-          background: 'var(--brand-gradient)',
-          border: 'none',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '1.5rem',
-          boxShadow: '0 4px 20px rgba(10, 150, 150, 0.45)',
-          transition: 'transform 0.2s, box-shadow 0.2s',
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.transform = 'scale(1.08)'
-          e.currentTarget.style.boxShadow = '0 6px 28px rgba(10, 150, 150, 0.6)'
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.transform = 'scale(1)'
-          e.currentTarget.style.boxShadow = '0 4px 20px rgba(10, 150, 150, 0.45)'
-        }}
-      >
-        {open ? '✕' : '🌊'}
-      </button>
+      {/* ── Floating button + label ──────────────────────────────────────── */}
+      <div style={{
+        position: 'fixed',
+        bottom: 24,
+        right: 20,
+        zIndex: 1000,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+        flexDirection: 'row',
+      }}>
+        {/* "Ask AI Free" label — only shown when chat is closed */}
+        {!open && (
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            animation: 'slideIn 0.4s ease',
+          }}>
+            <div style={{
+              padding: '6px 12px',
+              borderRadius: 20,
+              background: 'var(--brand-gradient)',
+              color: '#021414',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              whiteSpace: 'nowrap',
+              boxShadow: '0 2px 12px rgba(10,150,150,0.4)',
+              letterSpacing: '0.02em',
+            }}>
+              🤖 Ask AI — Free
+            </div>
+            <div style={{
+              fontSize: '0.65rem',
+              color: 'var(--accent-cyan)',
+              marginTop: 3,
+              paddingRight: 4,
+              opacity: 0.8,
+            }}>
+              Tap to ask about any tide
+            </div>
+          </div>
+        )}
+
+        {/* Pulse ring + button */}
+        <div style={{ position: 'relative', flexShrink: 0 }}>
+          {/* Pulsing ring — only when closed */}
+          {!open && (
+            <span style={{
+              position: 'absolute',
+              inset: -4,
+              borderRadius: '50%',
+              border: '2px solid rgba(13, 200, 200, 0.6)',
+              animation: 'ripple 1.8s ease-out infinite',
+              pointerEvents: 'none',
+            }} />
+          )}
+          <button
+            onClick={() => setOpen(o => !o)}
+            aria-label={open ? 'Close AI chat' : 'Open AI chat'}
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: '50%',
+              background: 'var(--brand-gradient)',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.5rem',
+              boxShadow: '0 4px 20px rgba(10, 150, 150, 0.5)',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'scale(1.08)'
+              e.currentTarget.style.boxShadow = '0 6px 28px rgba(10, 150, 150, 0.7)'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'scale(1)'
+              e.currentTarget.style.boxShadow = '0 4px 20px rgba(10, 150, 150, 0.5)'
+            }}
+          >
+            {open ? '✕' : '🌊'}
+          </button>
+        </div>
+      </div>
 
       {/* ── Chat panel ───────────────────────────────────────────────────── */}
       {open && (
@@ -345,6 +399,14 @@ export default function TideChat() {
         @keyframes pulse {
           0%, 100% { opacity: 1; }
           50%       { opacity: 0.3; }
+        }
+        @keyframes ripple {
+          0%   { transform: scale(1);    opacity: 0.8; }
+          100% { transform: scale(1.65); opacity: 0; }
+        }
+        @keyframes slideIn {
+          from { opacity: 0; transform: translateX(10px); }
+          to   { opacity: 1; transform: translateX(0); }
         }
       `}</style>
     </>
