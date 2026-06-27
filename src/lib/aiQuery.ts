@@ -294,6 +294,55 @@ function directionArrow(points: {height:number}[], idx: number): string {
   return points[idx + 1].height > points[idx - 1].height ? '↑' : '↓'
 }
 
+/** "in 2h 15min" or "45 min ago" relative to now */
+function timeUntil(target: Date): string {
+  const diffMs = target.getTime() - Date.now()
+  if (diffMs <= 0) {
+    const m = Math.round(-diffMs / 60_000)
+    return m < 60 ? `${m} min ago` : `${Math.floor(m / 60)}h ago`
+  }
+  const mins = Math.round(diffMs / 60_000)
+  if (mins < 60) return `in ${mins} min`
+  const h = Math.floor(mins / 60)
+  const m = mins % 60
+  return m > 0 ? `in ${h}h ${m}min` : `in ${h}h`
+}
+
+/** Rate of tide change from 10-min sampled points */
+function tideRateText(points: { time: Date; height: number }[], idx: number): string {
+  if (idx < 2 || idx >= points.length - 2) return ''
+  const delta = points[idx + 2].height - points[idx - 2].height
+  const ratePerHr = Math.abs(delta) * 1.5
+  if (ratePerHr < 0.04) return 'Slack water'
+  const dir = delta > 0 ? 'Rising' : 'Falling'
+  if (ratePerHr > 1.0) return `${dir} fast (~${ratePerHr.toFixed(1)} m/hr)`
+  return `${dir} (~${ratePerHr.toFixed(1)} m/hr)`
+}
+
+/** Warning for ports with large tidal ranges */
+function rangeWarning(port: Port): string {
+  if (port.springRange >= 6) {
+    return `!! Extreme range at ${port.name} (~${port.springRange.toFixed(0)} m spring). Monitor mooring tension and keel clearance continuously.`
+  }
+  if (port.springRange >= 3.5) {
+    return `Large spring range (~${port.springRange.toFixed(0)} m). Check mooring lines and keel clearance at LW.`
+  }
+  return ''
+}
+
+/** Plain-English spring/neap explanation for mariners and non-experts */
+function phaseExplain(phase: string, port: Port): string {
+  const sr = port.springRange.toFixed(1)
+  const nr = (port.springRange * 0.55).toFixed(1)
+  if (phase === 'Spring' || phase === 'Near Spring') {
+    return `Spring tides (near new/full moon) — range at maximum (~${sr} m). HW is highest, LW is lowest. Best tidal window for deep-draft entry.`
+  }
+  if (phase === 'Neap' || phase === 'Near Neap') {
+    return `Neap tides (quarter moon) — smaller range (~${nr} m). HW lower, LW higher than springs. Easier mooring, less tidal assistance.`
+  }
+  return `Intermediate phase — range between spring (~${sr} m) and neap (~${nr} m).`
+}
+
 function buildScheduleResponse(port: Port, date: Date): string {
   const events = dailyHWLW(date, port.constituents)
   const phase  = tidalPhase(date)
@@ -310,9 +359,14 @@ function buildScheduleResponse(port: Port, date: Date): string {
   } else {
     for (const e of events) {
       const icon = e.type === 'HW' ? '🔼 HW' : '🔽 LW'
-      lines.push(`${icon}  ${toIST(e.time)}  —  ${e.height.toFixed(2)} m`)
+      lines.push(`${icon}  ${toIST(e.time)} (${timeUntil(e.time)})  —  ${e.height.toFixed(2)} m`)
     }
   }
+
+  const warn = rangeWarning(port)
+  if (warn) { lines.push(''); lines.push(warn) }
+  lines.push('')
+  lines.push('Verify with NHO Tide Tables before critical operations.')
 
   return lines.join('\n')
 }
@@ -338,14 +392,14 @@ function buildHighTideResponse(port: Port, date: Date, hour: number | null): str
 
   const lines = [
     `📍 High tide at ${port.name} — ${toISTDate(date)}`,
-    `🔼 HW  ${toIST(targetHW.time)}  —  ${targetHW.height.toFixed(2)} m`,
+    `🔼 HW  ${toIST(targetHW.time)} (${timeUntil(targetHW.time)})  —  ${targetHW.height.toFixed(2)} m`,
     '',
   ]
 
   // Show other HW events for context
   const others = hws.filter(e => e !== targetHW)
   if (others.length > 0) {
-    lines.push(`Other HW: ${others.map(e => `${toIST(e.time)} (${e.height.toFixed(1)} m)`).join(', ')}`)
+    lines.push(`Other HW: ${others.map(e => `${toIST(e.time)} (${e.height.toFixed(1)} m, ${timeUntil(e.time)})`).join(', ')}`)
     lines.push('')
   }
 
@@ -373,13 +427,13 @@ function buildLowTideResponse(port: Port, date: Date, hour: number | null): stri
 
   const lines = [
     `📍 Low tide at ${port.name} — ${toISTDate(date)}`,
-    `🔽 LW  ${toIST(targetLW.time)}  —  ${targetLW.height.toFixed(2)} m`,
+    `🔽 LW  ${toIST(targetLW.time)} (${timeUntil(targetLW.time)})  —  ${targetLW.height.toFixed(2)} m`,
     '',
   ]
 
   const others = lws.filter(e => e !== targetLW)
   if (others.length > 0) {
-    lines.push(`Other LW: ${others.map(e => `${toIST(e.time)} (${e.height.toFixed(1)} m)`).join(', ')}`)
+    lines.push(`Other LW: ${others.map(e => `${toIST(e.time)} (${e.height.toFixed(1)} m, ${timeUntil(e.time)})`).join(', ')}`)
     lines.push('')
   }
 
@@ -417,18 +471,20 @@ function buildCurrentResponse(port: Port, date: Date, hour: number | null): stri
   const nextHW = events.find(e => e.type === 'HW' && e.time.getTime() > targetTime.getTime())
   const nextLW = events.find(e => e.type === 'LW' && e.time.getTime() > targetTime.getTime())
 
+  const rate      = tideRateText(points, closestIdx)
+  const pct       = Math.round((height / port.mhws) * 100)
   const timeLabel = hour !== null
     ? `${String(istHour).padStart(2,'0')}:00 IST`
     : 'Now'
 
   const lines = [
     `📍 ${port.name} — ${toISTDate(date)} at ${timeLabel}`,
-    `🌊 Tide: ${height.toFixed(2)} m ${arrow}`,
+    `🌊 Tide: ${height.toFixed(2)} m (${pct}% of MHWS)  ${rate}`,
     '',
   ]
 
-  if (nextHW) lines.push(`🔼 Next HW: ${toIST(nextHW.time)} — ${nextHW.height.toFixed(2)} m`)
-  if (nextLW) lines.push(`🔽 Next LW: ${toIST(nextLW.time)} — ${nextLW.height.toFixed(2)} m`)
+  if (nextHW) lines.push(`🔼 Next HW: ${toIST(nextHW.time)} (${timeUntil(nextHW.time)}) — ${nextHW.height.toFixed(2)} m`)
+  if (nextLW) lines.push(`🔽 Next LW: ${toIST(nextLW.time)} (${timeUntil(nextLW.time)}) — ${nextLW.height.toFixed(2)} m`)
   lines.push('')
   lines.push(phaseEmoji(phase))
 
@@ -448,36 +504,42 @@ function buildSafeResponse(port: Port, date: Date, hour: number | null): string 
 
   const nextHW = events.find(e => e.type === 'HW' && e.time.getTime() > targetTime.getTime())
   const nextLW = events.find(e => e.type === 'LW' && e.time.getTime() > targetTime.getTime())
-  const range  = port.springRange
-
-  // Simple safety assessment
-  const hwThreshold = port.mhws * 0.7
+  // Safety assessment based on proportion of MHWS
+  const pct = height / port.mhws
   let advice = ''
-  if (height >= hwThreshold) {
-    advice = '✅ Tide is favourable for deep draft vessels.'
-  } else if (height >= hwThreshold * 0.5) {
-    advice = '⚠️  Moderate water — check vessel draft carefully.'
+  let draftNote = ''
+  if (pct >= 0.75) {
+    advice = '✅ Favourable — good water depth available.'
+    draftNote = `Height ${height.toFixed(2)} m is ${Math.round(pct * 100)}% of MHWS (${port.mhws.toFixed(1)} m). Most vessel classes can operate.`
+  } else if (pct >= 0.45) {
+    advice = '⚠️  Moderate — check vessel draft carefully.'
+    draftNote = `Height ${height.toFixed(2)} m is ${Math.round(pct * 100)}% of MHWS. Verify keel clearance before entry.`
   } else {
-    advice = '🚫 Low water — not suitable for deep draft vessels.'
+    advice = '🚫 Low water — restricted depth. Wait for next HW if possible.'
+    draftNote = `Height only ${height.toFixed(2)} m (${Math.round(pct * 100)}% of MHWS). Deep-draft vessels should delay.`
   }
 
   const timeLabel = `${String(istHour).padStart(2,'0')}:00 IST`
 
   const lines = [
     `📍 ${port.name} — ${toISTDate(date)} at ${timeLabel}`,
-    `🌊 Tide height: ${height.toFixed(2)} m`,
+    `🌊 Tide: ${height.toFixed(2)} m  |  MHWS: ${port.mhws.toFixed(1)} m  |  MLWS: ${port.mlws.toFixed(1)} m`,
     '',
     advice,
+    draftNote,
     '',
   ]
 
-  if (nextHW) lines.push(`🔼 Next HW: ${toIST(nextHW.time)} — ${nextHW.height.toFixed(2)} m`)
-  if (nextLW) lines.push(`🔽 Next LW: ${toIST(nextLW.time)} — ${nextLW.height.toFixed(2)} m`)
+  if (nextHW) lines.push(`🔼 Next HW: ${toIST(nextHW.time)} (${timeUntil(nextHW.time)}) — ${nextHW.height.toFixed(2)} m`)
+  if (nextLW) lines.push(`🔽 Next LW: ${toIST(nextLW.time)} (${timeUntil(nextLW.time)}) — ${nextLW.height.toFixed(2)} m`)
+
+  const warn = rangeWarning(port)
+  if (warn) { lines.push(''); lines.push(warn) }
+
   lines.push('')
-  lines.push(`Spring range at ${port.name}: ~${range.toFixed(1)} m`)
   lines.push(phaseEmoji(phase))
   lines.push('')
-  lines.push('⚠️ Always verify against official NHO Tide Tables.')
+  lines.push('Always verify with official NHO Tide Tables before navigation.')
 
   return lines.join('\n')
 }
@@ -495,7 +557,6 @@ function buildPhaseResponse(port: Port, date: Date): string {
     '',
   ]
 
-  // Show today's actual HW/LW range
   const events = dailyHWLW(date, port.constituents)
   const hws = events.filter(e => e.type === 'HW')
   const lws = events.filter(e => e.type === 'LW')
@@ -504,6 +565,9 @@ function buildPhaseResponse(port: Port, date: Date): string {
     const minLW = Math.min(...lws.map(e => e.height))
     lines.push(`Today's range: ${(maxHW - minLW).toFixed(2)} m`)
   }
+
+  lines.push('')
+  lines.push(phaseExplain(phase, port))
 
   return lines.join('\n')
 }
@@ -523,11 +587,14 @@ function buildRangeResponse(port: Port, date: Date): string {
   if (hws.length > 0 && lws.length > 0) {
     const maxHW = Math.max(...hws.map(e => e.height))
     const minLW = Math.min(...lws.map(e => e.height))
-    lines.push(`Today's tidal range: ${(maxHW - minLW).toFixed(2)} m`)
+    const dayRange = maxHW - minLW
+    lines.push(`Today's range: ${dayRange.toFixed(2)} m`)
     lines.push(`  Highest HW: ${maxHW.toFixed(2)} m`)
-    lines.push(`  Lowest  LW: ${minLW.toFixed(2)} m`)
+    lines.push(`  Lowest LW:  ${minLW.toFixed(2)} m`)
     lines.push('')
-    lines.push(`Spring range (approx): ~${port.springRange.toFixed(1)} m`)
+    lines.push(`Spring (max): ~${port.springRange.toFixed(1)} m  |  MHWS: ${port.mhws.toFixed(1)} m  |  MLWS: ${port.mlws.toFixed(1)} m`)
+    const warn = rangeWarning(port)
+    if (warn) { lines.push(''); lines.push(warn) }
   } else {
     lines.push('Could not calculate range for this date.')
   }
