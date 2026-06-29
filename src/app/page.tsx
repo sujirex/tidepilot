@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import {
@@ -25,7 +25,7 @@ const PORT_SOURCE_LABEL: Record<string, string> = {
   proxy:           'Hazira Proxy',
 }
 
-// â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 /** UTC midnight that represents "today" in IST */
 function todayIST(): Date {
@@ -42,7 +42,7 @@ function fmtCountdown(ms: number): string {
   return h > 0 ? `${h}h ${m}m` : `${m}m`
 }
 
-/** Nearest 30-min label (24h "HH:MM") in IST â€” for matching chart axis keys */
+/** Nearest 30-min label (24h "HH:MM") in IST — for matching chart axis keys */
 function nearestChartLabel(date: Date): string {
   const ist  = new Date(date.getTime() + 5.5 * 3_600_000)
   const mins = ist.getUTCHours() * 60 + ist.getUTCMinutes()
@@ -52,7 +52,7 @@ function nearestChartLabel(date: Date): string {
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
 }
 
-// â”€â”€â”€ Sub-components â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Sub-components ────────────────────────────────────────────────────────────
 
 function TideTooltip({ active, payload, label }: {
   active?: boolean; payload?: { value: number }[]; label?: string
@@ -82,34 +82,34 @@ const PHASE_STYLE: Record<TidalPhase, { bg: string; color: string; border: strin
   'Neap':         { bg: 'rgba(56,189,248,0.12)', color: '#38bdf8', border: 'rgba(56,189,248,0.35)' },
 }
 
-// â”€â”€â”€ Live Indian Coast Links â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Live Indian Coast Links ───────────────────────────────────────────────────
 
 const COAST_LINKS = [
   {
-    icon: 'ðŸŒŠ',
+    icon: '🌊',
     label: 'INCOIS Ocean Services',
-    sub: 'Waves Â· Currents Â· Tsunami alerts',
+    sub: 'Waves · Currents · Tsunami alerts',
     url: 'https://incois.gov.in/site/index.jsp',
     color: '#0DC8C8',
   },
   {
-    icon: 'ðŸŒ§ï¸',
+    icon: '🌧️',
     label: 'IMD Weather Warnings',
-    sub: 'Storm Â· Wind Â· Rain bulletins',
+    sub: 'Storm · Wind · Rain bulletins',
     url: 'https://mausam.imd.gov.in/',
     color: '#f97316',
   },
   {
-    icon: 'ðŸŒ€',
+    icon: '🌀',
     label: 'IMD Weather & Cyclone',
-    sub: 'Storm Â· Cyclone Â· Weather warnings',
+    sub: 'Storm · Cyclone · Weather warnings',
     url: 'https://mausam.imd.gov.in/index_en.php',
     color: '#ef4444',
   },
   {
-    icon: 'âš“',
+    icon: '⚓',
     label: 'Indian Coast Guard',
-    sub: 'Maritime safety Â· Distress alerts',
+    sub: 'Maritime safety · Distress alerts',
     url: 'https://www.indiancoastguard.gov.in/',
     color: '#f59e0b',
   },
@@ -122,7 +122,7 @@ function LiveCoastLinks() {
         <div className="flex items-center gap-2 mb-3">
           <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#ef4444', boxShadow: '0 0 4px #ef4444' }} />
           <span className="font-mono font-semibold" style={{ fontSize: '0.68rem', letterSpacing: '0.10em', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
-            Live Indian Coast â€” View on Official Sources
+            Live Indian Coast — View on Official Sources
           </span>
         </div>
         <div className="grid grid-cols-2 gap-2" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))' }}>
@@ -213,7 +213,7 @@ function MiniRemindersStrip() {
             className="text-[10px] font-mono flex-shrink-0 ml-auto transition-opacity hover:opacity-80"
             style={{ color: 'var(--accent-cyan)' }}
           >
-            View all â†’
+            View all →
           </a>
         </div>
       </div>
@@ -242,7 +242,7 @@ function HeroEmblem() {
   )
 }
 
-// â”€â”€â”€ Main page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Main page ────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
   const { timeFormat } = useTheme()
@@ -285,13 +285,13 @@ export default function HomePage() {
     return selectedDate.getTime() === todayIST().getTime()
   }, [mounted, selectedDate])
 
-  // Live current tide height â€” only when viewing today
+  // Live current tide height — only when viewing today
   const currentHeight = useMemo(() => {
     if (!mounted || !isToday) return null
     return tideHeight(now, port.constituents)
   }, [now, mounted, isToday, port.constituents])
 
-  // Fill level relative to MHWS (0â€“100)
+  // Fill level relative to MHWS (0–100)
   const fillPct = currentHeight !== null
     ? Math.min(100, Math.round((currentHeight / port.mhws) * 100))
     : null
@@ -329,7 +329,7 @@ export default function HomePage() {
 
   // Displayed date string
   const displayDate = useMemo(() => {
-    if (!mounted) return 'â€”'
+    if (!mounted) return '—'
     return selectedDate.toLocaleDateString('en-IN', {
       timeZone: 'UTC',
       weekday: 'short',
@@ -342,7 +342,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen pt-14" style={{ background: 'var(--bg-page)' }}>
 
-      {/* â”€â”€ Hero â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <section className="ocean-bg relative py-14 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none"
           style={{ background: 'radial-gradient(ellipse at 20% 50%, rgba(10,150,150,0.14) 0%, transparent 60%)' }} />
@@ -362,10 +362,10 @@ export default function HomePage() {
             <span className="hero-gradient-text">TidePilot</span>
           </h1>
           <p className="text-sm mb-2" style={{ color: 'rgba(255,255,255,0.88)', maxWidth: 480 }}>
-            Harmonic tide predictions for 12 major Indian ports â€” Daily, Weekly, Monthly, Annual and Port Comparison.
+            Harmonic tide predictions for 12 major Indian ports — Daily, Weekly, Monthly, Annual and Port Comparison.
           </p>
           <p className="text-xs font-mono" style={{ color: 'rgba(255,255,255,0.58)' }}>
-            NHO Official Â· TPXO9 Global Model Â· Admiralty Tide Tables
+            NHO Official · TPXO9 Global Model · Admiralty Tide Tables
           </p>
 
           {/* AI feature badge */}
@@ -383,7 +383,7 @@ export default function HomePage() {
               backdropFilter: 'blur(8px)',
             }}
           >
-            <span style={{ fontSize: '1rem' }}>ðŸ‘‘</span>
+            <span style={{ fontSize: '1rem' }}>👑</span>
             <div>
               <span style={{
                 fontSize: '0.78rem',
@@ -391,27 +391,27 @@ export default function HomePage() {
                 color: '#0DC8C8',
                 letterSpacing: '0.03em',
               }}>
-                Ask REX â€” Free AI
+                Ask REX — Free AI
               </span>
               <span style={{
                 fontSize: '0.72rem',
                 color: 'rgba(255,255,255,0.55)',
                 marginLeft: 8,
               }}>
-                "High tide at Kandla tomorrow?" Â· Tap ðŸ‘‘ below â†’
+                "High tide at Kandla tomorrow?" · Tap 👑 below →
               </span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* â”€â”€ Government Alerts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ── Government Alerts ─────────────────────────────────────────────── */}
       <LiveCoastLinks />
 
-      {/* â”€â”€ Mini Reminders Strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ── Mini Reminders Strip ──────────────────────────────────────────── */}
       {mounted && <MiniRemindersStrip />}
 
-      {/* â”€â”€ Controls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ── Controls ──────────────────────────────────────────────────────── */}
       <section className="py-6" style={{ background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
         <div className="container-tp">
           <div className="flex flex-wrap gap-4 items-end">
@@ -435,7 +435,7 @@ export default function HomePage() {
                 {(Object.keys(PORTS_BY_REGION) as (keyof typeof PORTS_BY_REGION)[]).map(region => (
                   <optgroup key={region} label={REGION_LABELS[region]}>
                     {PORTS_BY_REGION[region].map(p => (
-                      <option key={p.id} value={p.id}>{p.name} â€” {p.state}</option>
+                      <option key={p.id} value={p.id}>{p.name} — {p.state}</option>
                     ))}
                   </optgroup>
                 ))}
@@ -464,7 +464,7 @@ export default function HomePage() {
                     color: isToday ? 'var(--accent-cyan)' : 'var(--text-primary)',
                   }}
                 >
-                  {isToday ? 'â–¶ Today' : displayDate}
+                  {isToday ? '▶ Today' : displayDate}
                 </div>
                 <button
                   onClick={() => shiftDate(1)}
@@ -525,12 +525,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* â”€â”€ Main content â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ── Main content ──────────────────────────────────────────────────── */}
       <section className="py-8">
         <div className="container-tp">
           <div className="grid md:grid-cols-[1fr_300px] gap-6">
 
-            {/* â”€â”€ Tide chart â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            {/* ── Tide chart ────────────────────────────────────────────── */}
             <div className="glass-card p-5">
               <div className="flex items-center justify-between mb-4">
                 <div>
@@ -538,7 +538,7 @@ export default function HomePage() {
                     {port.fullName}
                   </h2>
                   <p className="text-xs font-mono mt-0.5" style={{ color: 'var(--text-muted)' }}>
-                    {isToday ? "Today's" : displayDate} tide curve Â· IST
+                    {isToday ? "Today's" : displayDate} tide curve · IST
                   </p>
                 </div>
                 <span className="source-pill">{PORT_SOURCE_LABEL[port.source] ?? 'Harmonic'}</span>
@@ -630,12 +630,12 @@ export default function HomePage() {
               ) : (
                 <div className="h-64 flex items-center justify-center text-xs font-mono"
                   style={{ color: 'var(--text-muted)' }}>
-                  Computing tidesâ€¦
+                  Computing tides…
                 </div>
               )}
             </div>
 
-            {/* â”€â”€ Right panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            {/* ── Right panel ───────────────────────────────────────────── */}
             <div className="flex flex-col gap-4">
 
               {/* Live current height (today only) */}
@@ -644,7 +644,7 @@ export default function HomePage() {
                   <div className="flex items-center gap-2 mb-3">
                     <Droplets className="w-3.5 h-3.5" style={{ color: 'var(--accent-blue)' }} />
                     <span className="text-xs font-mono font-semibold" style={{ color: 'var(--text-muted)' }}>
-                      CURRENT HEIGHT Â· IST {toIST(now, timeFormat)}
+                      CURRENT HEIGHT · IST {toIST(now, timeFormat)}
                     </span>
                   </div>
                   <div className="font-mono font-bold" style={{ fontSize: '2rem', color: 'var(--text-primary)' }}>
@@ -738,14 +738,14 @@ export default function HomePage() {
                   </div>
                 ) : (
                   <div className="text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
-                    {mounted ? 'No events found' : 'Computingâ€¦'}
+                    {mounted ? 'No events found' : 'Computing…'}
                   </div>
                 )}
               </div>
             </div>
           </div>
 
-          {/* â”€â”€ Port grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+          {/* ── Port grid ──────────────────────────────────────────────────── */}
           <div className="mt-8">
             <h2 className="font-display font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
               All Ports
@@ -763,7 +763,7 @@ export default function HomePage() {
                       {p.name}
                     </span>
                     <span className="text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
-                      â†• {p.springRange} m
+                      ↕ {p.springRange} m
                     </span>
                   </div>
                   <div className="text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
@@ -803,4 +803,3 @@ export default function HomePage() {
     </div>
   )
 }
-
