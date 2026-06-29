@@ -383,7 +383,7 @@ export default function HomePage() {
               backdropFilter: 'blur(8px)',
             }}
           >
-            <span style={{ fontSize: '1rem' }}>🤖</span>
+            <span style={{ fontSize: '1rem' }}>👑</span>
             <div>
               <span style={{
                 fontSize: '0.78rem',
@@ -391,14 +391,14 @@ export default function HomePage() {
                 color: '#0DC8C8',
                 letterSpacing: '0.03em',
               }}>
-                Free AI — Ask anything in plain English
+                Ask REX — Free AI
               </span>
               <span style={{
                 fontSize: '0.72rem',
                 color: 'rgba(255,255,255,0.55)',
                 marginLeft: 8,
               }}>
-                "High tide at Kandla tomorrow?" · Tap 🌊 below →
+                "High tide at Kandla tomorrow?" · Tap 👑 below →
               </span>
             </div>
           </div>
