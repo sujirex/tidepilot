@@ -69,7 +69,7 @@ function MessageBubble({ msg }: { msg: Message }) {
             marginBottom: 4,
             letterSpacing: '0.05em',
           }}>
-            🌊 TidePilot AI
+            👑 REX
           </div>
         )}
         {msg.text}
@@ -97,7 +97,7 @@ export default function TideChat() {
     {
       role: 'ai',
       text: [
-        'Hi! I\'m TidePilot AI. 👋',
+        'Hi! I\'m REX. 👑',
         '',
         'Ask me anything about tides at Indian ports — in plain English.',
         '',
@@ -177,7 +177,7 @@ export default function TideChat() {
               boxShadow: '0 2px 12px rgba(10,150,150,0.4)',
               letterSpacing: '0.02em',
             }}>
-              🤖 Ask AI — Free
+              👑 Ask REX
             </div>
             <div style={{
               fontSize: '0.65rem',
@@ -230,7 +230,7 @@ export default function TideChat() {
               e.currentTarget.style.boxShadow = '0 4px 20px rgba(10, 150, 150, 0.5)'
             }}
           >
-            {open ? '✕' : '🌊'}
+            {open ? '✕' : '👑'}
           </button>
         </div>
       </div>
@@ -262,10 +262,10 @@ export default function TideChat() {
             gap: 10,
             flexShrink: 0,
           }}>
-            <div style={{ fontSize: '1.3rem' }}>🌊</div>
+            <div style={{ fontSize: '1.3rem' }}>👑</div>
             <div>
               <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#021414' }}>
-                TidePilot AI
+                REX
               </div>
               <div style={{ fontSize: '0.7rem', color: 'rgba(2,20,20,0.65)' }}>
                 Natural language tide queries · Indian ports
@@ -294,7 +294,7 @@ export default function TideChat() {
                 fontSize: '0.78rem',
                 color: 'var(--text-muted)',
               }}>
-                <span style={{ animation: 'pulse 1s infinite' }}>🌊</span>
+                <span style={{ animation: 'pulse 1s infinite' }}>👑</span>
                 Calculating tides…
               </div>
             )}
