@@ -169,7 +169,7 @@ export function tideHeight(
     const angle = (SPEEDS[name] * t + V0[name] + u[name] - g) * (Math.PI / 180)
     h += f[name] * H * Math.cos(angle)
   }
-  return Math.max(0, Math.round(h * 100) / 100)
+  return Math.max(0, h)
 }
 
 // ─── High-level helpers ────────────────────────────────────────────────────────
@@ -195,15 +195,33 @@ export function dailyTidePoints(
   return points
 }
 
-/** Find local HW/LW extrema in a sorted TidePoint array */
+/** Find local HW/LW extrema in a sorted TidePoint array.
+ *  Uses a ±2-point window so that plateau extrema (where consecutive
+ *  10-min samples have equal rounded heights) are still detected. */
 export function findHWLW(points: TidePoint[]): HWLWEvent[] {
   const events: HWLWEvent[] = []
-  for (let i = 1; i < points.length - 1; i++) {
-    const prev = points[i - 1].height
+  const n = points.length
+  let lastType: 'HW' | 'LW' | null = null
+
+  for (let i = 2; i < n - 2; i++) {
+    const p1 = points[i - 1].height
+    const p2 = points[i - 2].height
     const curr = points[i].height
-    const next = points[i + 1].height
-    if (curr > prev && curr > next) events.push({ time: points[i].time, height: curr, type: 'HW' })
-    else if (curr < prev && curr < next) events.push({ time: points[i].time, height: curr, type: 'LW' })
+    const n1 = points[i + 1].height
+    const n2 = points[i + 2].height
+
+    // HW: not lower than immediate neighbours AND strictly higher than ±2 neighbours
+    const isHW = curr >= p1 && curr >= n1 && curr > p2 && curr > n2
+    // LW: not higher than immediate neighbours AND strictly lower than ±2 neighbours
+    const isLW = curr <= p1 && curr <= n1 && curr < p2 && curr < n2
+
+    if (isHW && lastType !== 'HW') {
+      events.push({ time: points[i].time, height: curr, type: 'HW' })
+      lastType = 'HW'
+    } else if (isLW && lastType !== 'LW') {
+      events.push({ time: points[i].time, height: curr, type: 'LW' })
+      lastType = 'LW'
+    }
   }
   return events
 }
