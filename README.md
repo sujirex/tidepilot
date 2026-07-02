@@ -3,7 +3,6 @@
 **Real-time tidal data and coastal planning for marine and shipyard operations.**
 
 Live app: **[tidepilot.sujikumar.com](https://tidepilot.sujikumar.com)**
-
 ---
 
 ## The problem
