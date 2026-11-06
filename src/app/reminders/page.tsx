@@ -69,7 +69,7 @@ function ReminderCard({
     <div
       className="glass-card p-4 transition-all"
       style={{
-        borderLeft: `4px solid ${reminder.done ? 'rgba(148,163,184,0.30)' : ev.color}`,
+        borderLeft: `4px solid ${reminder.done ? 'color-mix(in srgb, var(--faint) 30%, transparent)' : ev.color}`,
         opacity: reminder.done || isPast ? 0.65 : 1,
       }}
     >
@@ -77,7 +77,7 @@ function ReminderCard({
         {/* Icon */}
         <div
           className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-lg"
-          style={{ background: `${ev.color}18`, border: `1px solid ${ev.color}30` }}
+          style={{ background: `color-mix(in srgb, ${ev.color} 9%, transparent)`, border: `1px solid color-mix(in srgb, ${ev.color} 19%, transparent)` }}
         >
           {ev.icon}
         </div>
@@ -149,9 +149,9 @@ function ReminderCard({
             title={reminder.done ? 'Mark as pending' : 'Mark as done'}
             className="w-7 h-7 rounded-lg flex items-center justify-center transition-all"
             style={{
-              background: reminder.done ? 'rgba(52,211,153,0.18)' : 'var(--bg-card)',
-              border: `1px solid ${reminder.done ? 'rgba(52,211,153,0.40)' : 'var(--border)'}`,
-              color: reminder.done ? '#34d399' : 'var(--text-muted)',
+              background: reminder.done ? 'color-mix(in srgb, var(--ok) 18%, transparent)' : 'var(--bg-card)',
+              border: `1px solid ${reminder.done ? 'color-mix(in srgb, var(--ok) 40%, transparent)' : 'var(--border)'}`,
+              color: reminder.done ? 'var(--ok)' : 'var(--text-muted)',
             }}
           >
             <Check className="w-3.5 h-3.5" />
@@ -256,7 +256,7 @@ function AddReminderForm({ onAdded }: { onAdded: () => void }) {
                         onClick={() => setTypeId(ev.id)}
                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all"
                         style={typeId === ev.id
-                          ? { background: `${ev.color}22`, border: `1px solid ${ev.color}66`, color: ev.color }
+                          ? { background: `color-mix(in srgb, ${ev.color} 13%, transparent)`, border: `1px solid color-mix(in srgb, ${ev.color} 40%, transparent)`, color: ev.color }
                           : { background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text-muted)' }}
                       >
                         <span>{ev.icon}</span> {ev.label}
@@ -378,7 +378,7 @@ function AddReminderForm({ onAdded }: { onAdded: () => void }) {
               background: (!title.trim() || !date) ? 'var(--border)' : 'var(--brand-gradient)',
               color: (!title.trim() || !date) ? 'var(--text-muted)' : '#ffffff',
               cursor: (!title.trim() || !date) ? 'not-allowed' : 'pointer',
-              boxShadow: (!title.trim() || !date) ? 'none' : '0 2px 12px rgba(10,150,150,0.32)',
+              boxShadow: (!title.trim() || !date) ? 'none' : '0 2px 12px color-mix(in srgb, var(--g1) 32%, transparent)',
             }}
           >
             {saved ? '✓ Reminder Saved!' : `Save ${selectedType.icon} ${selectedType.label} Reminder`}
@@ -437,17 +437,17 @@ export default function RemindersPage() {
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <section className="ocean-bg relative py-12 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse at 30% 50%, rgba(10,150,150,0.18) 0%, transparent 60%)' }} />
+          style={{ background: 'radial-gradient(ellipse at 30% 50%, color-mix(in srgb, var(--g1) 18%, transparent) 0%, transparent 60%)' }} />
         <div className="container-tp relative z-10">
           <div className="section-tag mb-5"
-            style={{ color: 'rgba(255,255,255,0.90)', background: 'rgba(255,255,255,0.15)', borderColor: 'rgba(255,255,255,0.30)' }}>
+            style={{ color: 'color-mix(in srgb, var(--ink) 90%, transparent)', background: 'color-mix(in srgb, var(--ink) 15%, transparent)', borderColor: 'color-mix(in srgb, var(--ink) 30%, transparent)' }}>
             <Bell className="w-3 h-3" /> Event Reminders
           </div>
           <h1 className="font-display font-bold mb-2"
-            style={{ fontSize: 'clamp(1.6rem,3.5vw,2.5rem)', color: '#ffffff' }}>
+            style={{ fontSize: 'clamp(1.6rem,3.5vw,2.5rem)', color: 'var(--ink)' }}>
             <span className="hero-gradient-text">Tide-Aware</span> Event Planner
           </h1>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.85)', maxWidth: 520 }}>
+          <p className="text-sm" style={{ color: 'color-mix(in srgb, var(--ink) 85%, transparent)', maxWidth: 520 }}>
             Schedule dockings, launchings, fishing windows, sea trials and more.
             All dates shown in IST. Email reminders coming soon.
           </p>
@@ -456,8 +456,8 @@ export default function RemindersPage() {
           {mounted && (
             <div className="flex gap-4 mt-6">
               {[
-                { label: 'TODAY',    value: countToday,    color: '#f59e0b' },
-                { label: 'UPCOMING', value: countUpcoming, color: '#0DC8C8' },
+                { label: 'TODAY',    value: countToday,    color: 'var(--accent-hw)' },
+                { label: 'UPCOMING', value: countUpcoming, color: 'var(--g1)' },
                 { label: 'TOTAL',    value: countTotal,    color: 'var(--accent-cyan)' },
               ].map(s => (
                 <div key={s.label}
@@ -494,7 +494,7 @@ export default function RemindersPage() {
                   onClick={() => setTab(t.id)}
                   className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-mono font-semibold transition-all"
                   style={tab === t.id
-                    ? { background: 'var(--brand-gradient)', color: '#fff', boxShadow: '0 2px 10px rgba(10,150,150,0.32)' }
+                    ? { background: 'var(--brand-gradient)', color: '#fff', boxShadow: '0 2px 10px color-mix(in srgb, var(--g1) 32%, transparent)' }
                     : { background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text-muted)' }}
                 >
                   {t.label}
@@ -535,7 +535,7 @@ export default function RemindersPage() {
           {/* Email reminder note */}
           <div
             className="glass-card p-4 flex items-start gap-3 text-xs"
-            style={{ borderLeft: '3px solid rgba(0,191,255,0.40)' }}
+            style={{ borderLeft: '3px solid color-mix(in srgb, var(--g2) 40%, transparent)' }}
           >
             <span style={{ fontSize: '1.1rem' }}>📧</span>
             <div style={{ color: 'var(--text-muted)' }}>
@@ -552,13 +552,6 @@ export default function RemindersPage() {
       <footer className="py-8 mt-4" style={{ borderTop: '1px solid var(--border)' }}>
         <div className="container-tp text-center text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
           <p>TidePilot · Reminders are stored locally on your device</p>
-          <p className="mt-1">
-            Built by{' '}
-            <a href="https://sujikumar.com" target="_blank" rel="noopener noreferrer"
-              style={{ color: 'var(--accent-cyan)' }}>
-              Suji Kumar C
-            </a>
-          </p>
         </div>
       </footer>
     </div>

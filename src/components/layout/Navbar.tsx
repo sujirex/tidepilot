@@ -6,29 +6,6 @@ import { usePathname } from 'next/navigation'
 import { Sun, Moon, Menu, X } from 'lucide-react'
 import { useTheme } from '@/context/ThemeContext'
 
-/** TidePilot wave emblem — blue gradient bg, double white wave */
-function TideEmblem({ size = 32 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <defs>
-        <linearGradient id="emblGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#0A9696" />
-          <stop offset="100%" stopColor="#0DC8C8" />
-        </linearGradient>
-      </defs>
-      <rect width="32" height="32" rx="7" fill="url(#emblGrad)" />
-      <path
-        d="M4 13 C8.5 8, 12 18, 16 13 C20 8, 23.5 18, 28 13"
-        stroke="rgba(255,255,255,0.45)" strokeWidth="2" strokeLinecap="round"
-      />
-      <path
-        d="M4 21 C8.5 15, 12 26, 16 21 C20 15, 23.5 26, 28 21"
-        stroke="white" strokeWidth="2.5" strokeLinecap="round"
-      />
-    </svg>
-  )
-}
-
 const NAV_LINKS = [
   { href: '/',           label: 'Home'      },
   { href: '/daily',      label: 'Daily'     },
@@ -42,7 +19,7 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const { theme, toggle, timeFormat, toggleTimeFormat } = useTheme()
-  const pathname = usePathname()
+  const pathname = usePathname() || '/'
   const [open, setOpen] = useState(false)
   const light = theme === 'light'
 
@@ -51,100 +28,84 @@ export default function Navbar() {
     : pathname
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 navbar-glass navbar-forced-dark">
-      <div className="container-tp">
-        <div className="flex items-center justify-between h-14">
+    <header className="tp-header">
+      <div className="tp-nav">
+        {/* Logo */}
+        <Link href="/" className="tp-brand" onClick={() => setOpen(false)}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/ss-emblem.svg" alt="SS emblem" width={36} height={36} />
+          <span>
+            <b>TidePilot</b>
+            <small>Indian Tides</small>
+          </span>
+        </Link>
 
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <TideEmblem size={32} />
-            <div>
-              <span className="font-display font-bold text-base leading-none"
-                style={{ color: 'var(--text-primary)' }}>
-                TidePilot
-              </span>
-              <span className="block text-[9px] font-mono tracking-widest uppercase -mt-0.5"
-                style={{ color: 'var(--accent-cyan)' }}>
-                Indian Tides
-              </span>
-            </div>
-          </Link>
-
-          {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-1">
-            {NAV_LINKS.map(link => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200"
-                style={current === link.href
-                  ? { color: '#ffffff', background: 'rgba(10,150,150,0.20)', boxShadow: '0 0 10px rgba(10,150,150,0.28)' }
-                  : { color: 'var(--text-secondary)' }}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Right actions */}
-          <div className="flex items-center gap-2">
-            {/* 24h / 12h toggle */}
-            <button
-              onClick={toggleTimeFormat}
-              aria-label="Toggle time format"
-              title={`Switch to ${timeFormat === '24h' ? '12-hour' : '24-hour'} format`}
-              className="px-2 py-1 rounded-lg text-xs font-mono font-bold transition-all"
-              style={{
-                background: 'var(--bg-card)',
-                border: '1px solid var(--border-accent)',
-                color: 'var(--accent-blue)',
-                letterSpacing: '0.04em',
-              }}
+        {/* Desktop nav */}
+        <nav className="hidden lg:flex items-center gap-0.5" aria-label="Main">
+          {NAV_LINKS.map(link => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`tp-link${current === link.href ? ' active' : ''}`}
+              aria-current={current === link.href ? 'page' : undefined}
             >
-              {timeFormat}
-            </button>
+              {link.label}
+            </Link>
+          ))}
+        </nav>
 
-            {/* Dark / light toggle */}
-            <button
-              onClick={toggle}
-              aria-label="Toggle theme"
-              className="p-2 rounded-lg transition-colors"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              {light ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-            </button>
+        {/* Right actions */}
+        <div className="flex items-center gap-1.5">
+          {/* 24h / 12h toggle */}
+          <button
+            type="button"
+            onClick={toggleTimeFormat}
+            aria-label="Toggle time format"
+            title={`Switch to ${timeFormat === '24h' ? '12-hour' : '24-hour'} format`}
+            className="tp-icon-btn"
+          >
+            {timeFormat}
+          </button>
 
-            {/* Mobile menu toggle */}
-            <button
-              className="md:hidden p-2 rounded-lg transition-colors"
-              style={{ color: 'var(--text-secondary)' }}
-              onClick={() => setOpen(o => !o)}
-              aria-label="Toggle menu"
-            >
-              {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
+          {/* Dark / light toggle */}
+          <button
+            type="button"
+            onClick={toggle}
+            aria-label={light ? 'Switch to dark mode' : 'Switch to light mode'}
+            title={light ? 'Switch to dark mode' : 'Switch to light mode'}
+            className="tp-icon-btn"
+          >
+            {light ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+          </button>
+
+          {/* Mobile menu toggle */}
+          <button
+            type="button"
+            className="tp-icon-btn tp-menu-btn"
+            onClick={() => setOpen(o => !o)}
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+          >
+            {open ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
         </div>
-
-        {/* Mobile drawer */}
-        {open && (
-          <div className="md:hidden pb-4 pt-2 flex flex-col gap-1">
-            {NAV_LINKS.map(link => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
-                style={current === link.href
-                  ? { color: '#ffffff', background: 'rgba(10,150,150,0.18)' }
-                  : { color: 'var(--text-secondary)' }}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        )}
       </div>
+
+      {/* Mobile drawer */}
+      {open && (
+        <div className="tp-menu">
+          {NAV_LINKS.map(link => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setOpen(false)}
+              className={`tp-link${current === link.href ? ' active' : ''}`}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      )}
     </header>
   )
 }

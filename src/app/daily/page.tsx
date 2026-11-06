@@ -8,11 +8,11 @@ import { PORTS } from '@/lib/ports'
 import { dailyTidePoints, dailyHWLW, tidalPhase, toIST } from '@/lib/tideEngine'
 
 const PHASE_STYLE: Record<string, { color: string; bg: string; border: string }> = {
-  'Spring':       { color: '#f59e0b', bg: 'rgba(245,158,11,0.12)',  border: 'rgba(245,158,11,0.32)'  },
-  'Near Spring':  { color: '#fb923c', bg: 'rgba(251,146,60,0.12)',  border: 'rgba(251,146,60,0.32)'  },
-  'Intermediate': { color: '#0DC8C8', bg: 'rgba(10,150,150,0.10)',  border: 'rgba(10,150,150,0.32)'  },
-  'Near Neap':    { color: '#38bdf8', bg: 'rgba(56,189,248,0.10)',  border: 'rgba(56,189,248,0.28)'  },
-  'Neap':         { color: '#818cf8', bg: 'rgba(129,140,248,0.10)', border: 'rgba(129,140,248,0.28)' },
+  'Spring':       { color: 'var(--accent-hw)', bg: 'color-mix(in srgb, var(--accent-hw) 12%, transparent)',  border: 'color-mix(in srgb, var(--accent-hw) 32%, transparent)'  },
+  'Near Spring':  { color: 'var(--spark)', bg: 'color-mix(in srgb, var(--spark) 12%, transparent)',  border: 'color-mix(in srgb, var(--spark) 32%, transparent)'  },
+  'Intermediate': { color: 'var(--g1)', bg: 'color-mix(in srgb, var(--g1) 10%, transparent)',  border: 'color-mix(in srgb, var(--g1) 32%, transparent)'  },
+  'Near Neap':    { color: 'var(--accent-lw)', bg: 'color-mix(in srgb, var(--accent-lw) 10%, transparent)',  border: 'color-mix(in srgb, var(--accent-lw) 28%, transparent)'  },
+  'Neap':         { color: 'var(--g3)', bg: 'color-mix(in srgb, var(--g3) 10%, transparent)', border: 'color-mix(in srgb, var(--g3) 28%, transparent)' },
 }
 
 function todayUTCStr(): string {
@@ -64,11 +64,11 @@ export default function DailyPage() {
       <div className="ocean-bg py-10">
         <div className="container-tp">
           <span className="section-tag mb-3"
-            style={{ color: 'rgba(255,255,255,0.90)', background: 'rgba(255,255,255,0.12)', borderColor: 'rgba(255,255,255,0.25)' }}>
+            style={{ color: 'color-mix(in srgb, var(--ink) 90%, transparent)', background: 'color-mix(in srgb, var(--ink) 12%, transparent)', borderColor: 'color-mix(in srgb, var(--ink) 25%, transparent)' }}>
             DAILY TIDES
           </span>
           <h1 className="font-display font-bold text-3xl mt-2 hero-gradient-text">Daily Tide Chart</h1>
-          <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.72)' }}>
+          <p className="mt-1 text-sm" style={{ color: 'color-mix(in srgb, var(--ink) 72%, transparent)' }}>
             Full 24-hour tide prediction — any port, any date
           </p>
         </div>
@@ -97,7 +97,7 @@ export default function DailyPage() {
           </div>
           <button onClick={() => setDateStr(todayUTCStr())}
             className="px-3 py-2 rounded-lg text-xs font-mono font-semibold hover:opacity-80"
-            style={{ background: 'rgba(10,150,150,0.14)', border: '1px solid rgba(10,150,150,0.32)', color: '#0DC8C8' }}>
+            style={{ background: 'color-mix(in srgb, var(--g1) 14%, transparent)', border: '1px solid color-mix(in srgb, var(--g1) 32%, transparent)', color: 'var(--g1)' }}>
             Today
           </button>
         </div>
@@ -118,8 +118,8 @@ export default function DailyPage() {
             <AreaChart data={chartPoints} margin={{ top: 10, right: 8, left: -22, bottom: 0 }}>
               <defs>
                 <linearGradient id="dailyGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%"  stopColor="#0A9696" stopOpacity={0.48} />
-                  <stop offset="95%" stopColor="#0A9696" stopOpacity={0.04} />
+                  <stop offset="5%"  stopColor="var(--g1)" stopOpacity={0.48} />
+                  <stop offset="95%" stopColor="var(--g1)" stopOpacity={0.04} />
                 </linearGradient>
               </defs>
               <XAxis dataKey="t" tick={{ fontSize: 10, fill: 'var(--text-muted)' }}
@@ -130,9 +130,9 @@ export default function DailyPage() {
                 contentStyle={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }}
                 formatter={(v: number) => [v.toFixed(2) + ' m', 'Height']}
                 labelStyle={{ color: 'var(--text-muted)' }} />
-              <ReferenceLine y={Number(midH)} stroke="rgba(13,200,200,0.22)" strokeDasharray="4 4" />
-              <Area type="monotone" dataKey="h" stroke="#0A9696" strokeWidth={2.5}
-                fill="url(#dailyGrad)" dot={false} activeDot={{ r: 4, fill: '#0DC8C8', stroke: 'none' }} />
+              <ReferenceLine y={Number(midH)} stroke="color-mix(in srgb, var(--g1) 22%, transparent)" strokeDasharray="4 4" />
+              <Area type="monotone" dataKey="h" stroke="var(--g1)" strokeWidth={2.5}
+                fill="url(#dailyGrad)" dot={false} activeDot={{ r: 4, fill: 'var(--g1)', stroke: 'none' }} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -151,12 +151,12 @@ export default function DailyPage() {
                 <div key={i} className="flex items-center justify-between px-4 py-3">
                   <div className="flex items-center gap-3">
                     <span className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0"
-                      style={{ background: isHW ? 'rgba(245,158,11,0.14)' : 'rgba(56,189,248,0.14)',
-                               color: isHW ? '#f59e0b' : '#38bdf8' }}>
+                      style={{ background: isHW ? 'color-mix(in srgb, var(--accent-hw) 14%, transparent)' : 'color-mix(in srgb, var(--accent-lw) 14%, transparent)',
+                               color: isHW ? 'var(--accent-hw)' : 'var(--accent-lw)' }}>
                       {isHW ? String.fromCharCode(9650) : String.fromCharCode(9660)}
                     </span>
                     <div>
-                      <div className="text-xs font-mono font-semibold" style={{ color: isHW ? '#f59e0b' : '#38bdf8' }}>
+                      <div className="text-xs font-mono font-semibold" style={{ color: isHW ? 'var(--accent-hw)' : 'var(--accent-lw)' }}>
                         {isHW ? 'High Water' : 'Low Water'}
                       </div>
                       <div className="text-sm font-mono mt-0.5" style={{ color: 'var(--text-secondary)' }}>

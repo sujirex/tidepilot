@@ -13,30 +13,44 @@ interface ThemeContextType {
 }
 
 const ThemeContext = createContext<ThemeContextType>({
-  theme:            'dark',
+  theme:            'light',
   toggle:           () => {},
   timeFormat:       '24h',
   toggleTimeFormat: () => {},
 })
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme,      setTheme]      = useState<Theme>('dark')
+  const [theme,      setTheme]      = useState<Theme>('light')
   const [timeFormat, setTimeFormat] = useState<TimeFormat>('24h')
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('tidepilot-theme') as Theme | null
-    if (savedTheme === 'light' || savedTheme === 'dark') setTheme(savedTheme)
+    // The head script already applied the saved choice or the device setting.
+    const applied = document.documentElement.getAttribute('data-theme')
+    if (applied === 'light' || applied === 'dark') setTheme(applied)
 
     const savedFmt = localStorage.getItem('tidepilot-timefmt') as TimeFormat | null
     if (savedFmt === '12h' || savedFmt === '24h') setTimeFormat(savedFmt)
+
+    // Follow the device until the user picks a theme.
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    const onChange = () => {
+      let saved: string | null = null
+      try { saved = localStorage.getItem('tidepilot-theme') } catch {}
+      if (saved === 'light' || saved === 'dark') return
+      const next: Theme = mq.matches ? 'dark' : 'light'
+      document.documentElement.setAttribute('data-theme', next)
+      setTheme(next)
+    }
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
   }, [])
 
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
-    localStorage.setItem('tidepilot-theme', theme)
-  }, [theme])
-
-  const toggle = () => setTheme(t => (t === 'dark' ? 'light' : 'dark'))
+  const toggle = () => setTheme(t => {
+    const next: Theme = t === 'dark' ? 'light' : 'dark'
+    document.documentElement.setAttribute('data-theme', next)
+    try { localStorage.setItem('tidepilot-theme', next) } catch {}
+    return next
+  })
 
   const toggleTimeFormat = () => {
     setTimeFormat(f => {

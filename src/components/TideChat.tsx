@@ -50,12 +50,12 @@ function MessageBubble({ msg }: { msg: Message }) {
         padding: '10px 14px',
         borderRadius: isAI ? '4px 14px 14px 14px' : '14px 4px 14px 14px',
         background: isAI
-          ? 'rgba(10, 150, 150, 0.12)'
+          ? 'color-mix(in srgb, var(--g1) 12%, transparent)'
           : 'var(--accent-cyan)',
         border: isAI
-          ? '1px solid rgba(10, 150, 150, 0.25)'
+          ? '1px solid color-mix(in srgb, var(--g1) 25%, transparent)'
           : 'none',
-        color: isAI ? 'var(--text-primary)' : '#021414',
+        color: isAI ? 'var(--text-primary)' : '#fff',
         fontSize: '0.82rem',
         lineHeight: 1.6,
         whiteSpace: 'pre-wrap',
@@ -170,18 +170,18 @@ export default function TideChat() {
               padding: '6px 12px',
               borderRadius: 20,
               background: 'var(--brand-gradient)',
-              color: '#021414',
+              color: '#fff',
               fontSize: '0.75rem',
               fontWeight: 700,
               whiteSpace: 'nowrap',
-              boxShadow: '0 2px 12px rgba(10,150,150,0.4)',
+              boxShadow: '0 2px 12px color-mix(in srgb, var(--g1) 40%, transparent)',
               letterSpacing: '0.02em',
             }}>
               👑 Ask REX
             </div>
-            <div style={{
+            <div className="hidden sm:block" style={{
               fontSize: '0.65rem',
-              color: 'var(--accent-cyan)',
+              color: 'var(--muted)',
               marginTop: 3,
               paddingRight: 4,
               opacity: 0.8,
@@ -199,7 +199,7 @@ export default function TideChat() {
               position: 'absolute',
               inset: -4,
               borderRadius: '50%',
-              border: '2px solid rgba(13, 200, 200, 0.6)',
+              border: '2px solid color-mix(in srgb, var(--g1) 60%, transparent)',
               animation: 'ripple 1.8s ease-out infinite',
               pointerEvents: 'none',
             }} />
@@ -218,16 +218,16 @@ export default function TideChat() {
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: '1.5rem',
-              boxShadow: '0 4px 20px rgba(10, 150, 150, 0.5)',
+              boxShadow: '0 4px 20px color-mix(in srgb, var(--g1) 50%, transparent)',
               transition: 'transform 0.2s, box-shadow 0.2s',
             }}
             onMouseEnter={e => {
               e.currentTarget.style.transform = 'scale(1.08)'
-              e.currentTarget.style.boxShadow = '0 6px 28px rgba(10, 150, 150, 0.7)'
+              e.currentTarget.style.boxShadow = '0 6px 28px color-mix(in srgb, var(--g1) 70%, transparent)'
             }}
             onMouseLeave={e => {
               e.currentTarget.style.transform = 'scale(1)'
-              e.currentTarget.style.boxShadow = '0 4px 20px rgba(10, 150, 150, 0.5)'
+              e.currentTarget.style.boxShadow = '0 4px 20px color-mix(in srgb, var(--g1) 50%, transparent)'
             }}
           >
             {open ? '✕' : '👑'}
@@ -264,10 +264,10 @@ export default function TideChat() {
           }}>
             <div style={{ fontSize: '1.3rem' }}>👑</div>
             <div>
-              <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#021414' }}>
+              <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#fff' }}>
                 REX
               </div>
-              <div style={{ fontSize: '0.7rem', color: 'rgba(2,20,20,0.65)' }}>
+              <div style={{ fontSize: '0.7rem', color: 'color-mix(in srgb, var(--ink) 80%, transparent)' }}>
                 Natural language tide queries · Indian ports
               </div>
             </div>
@@ -319,15 +319,15 @@ export default function TideChat() {
                         padding: '5px 10px',
                         borderRadius: 20,
                         border: '1px solid var(--border-accent)',
-                        background: 'rgba(10,150,150,0.08)',
+                        background: 'color-mix(in srgb, var(--g1) 8%, transparent)',
                         color: 'var(--accent-cyan)',
                         fontSize: '0.72rem',
                         cursor: 'pointer',
                         transition: 'background 0.15s',
                         fontFamily: 'inherit',
                       }}
-                      onMouseEnter={e => e.currentTarget.style.background = 'rgba(10,150,150,0.18)'}
-                      onMouseLeave={e => e.currentTarget.style.background = 'rgba(10,150,150,0.08)'}
+                      onMouseEnter={e => e.currentTarget.style.background = 'color-mix(in srgb, var(--g1) 18%, transparent)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'color-mix(in srgb, var(--g1) 8%, transparent)'}
                     >
                       {q}
                     </button>
@@ -379,7 +379,7 @@ export default function TideChat() {
                 background: input.trim() && !thinking
                   ? 'var(--brand-gradient)'
                   : 'var(--bg-card)',
-                color: input.trim() && !thinking ? '#021414' : 'var(--text-muted)',
+                color: input.trim() && !thinking ? '#fff' : 'var(--text-muted)',
                 cursor: input.trim() && !thinking ? 'pointer' : 'default',
                 fontSize: '1rem',
                 display: 'flex',

@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { Waves, TrendingUp, CalendarRange, CalendarDays, BarChart3, Scale, Bell, Anchor, Construction, Ship, MapPin, Clock, Moon } from 'lucide-react'
 import { useTheme } from '@/context/ThemeContext'
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -8,61 +9,61 @@ import { useTheme } from '@/context/ThemeContext'
 const VIEWS = [
   {
     href: '/',
-    icon: '🌊',
+    icon: Waves,
     title: 'Home — Live Tide',
-    color: '#0DC8C8',
+    color: 'var(--g1)',
     desc: 'Today\'s full 24-hour tide curve for any of the 12 ports. Shows the live current water level, a countdown to the next High Water or Low Water, and the tidal phase. Use the date arrows to browse past or future days.',
   },
   {
     href: '/daily',
-    icon: '📈',
+    icon: TrendingUp,
     title: 'Daily',
-    color: '#38bdf8',
+    color: 'var(--accent-lw)',
     desc: 'Detailed tide chart for a single chosen date. Pick any port and any date to get the precise HW/LW times and heights, the tidal phase badge, and an interactive curve you can hover for height at any hour.',
   },
   {
     href: '/weekly',
-    icon: '🗓️',
+    icon: CalendarRange,
     title: 'Weekly',
-    color: '#a78bfa',
+    color: 'var(--g3)',
     desc: 'A 7-day planner showing all HW/LW events for each day of the week. Ideal for scheduling berthing windows, dredging operations, or crew transfers across a work week. Navigate week-by-week with the arrows.',
   },
   {
     href: '/monthly',
-    icon: '📅',
+    icon: CalendarDays,
     title: 'Monthly',
-    color: '#f97316',
+    color: 'var(--spark)',
     desc: 'Full month table with every HW/LW event, plus three key statistics at the top — Peak High Water, Lowest Low Water, and Spring Tide days. Good for monthly planning, cargo scheduling, and vessel arrival windows.',
   },
   {
     href: '/annual',
-    icon: '📊',
+    icon: BarChart3,
     title: 'Annual',
-    color: '#f59e0b',
+    color: 'var(--accent-hw)',
     desc: 'Yearly overview with HAT and LAT (Highest and Lowest Astronomical Tides), a month-by-month summary, and a Shipbuilding & Dry-Dock Planning Guide that highlights the best months for launching, keel laying, and trials at each port.',
   },
   {
     href: '/compare',
-    icon: '⚖️',
+    icon: Scale,
     title: 'Compare',
-    color: '#34d399',
+    color: 'var(--ok)',
     desc: 'Side-by-side comparison of two ports on the same day. Both tide curves overlay on one chart (teal vs indigo), and HW/LW events are listed in two columns. Use this to coordinate multi-port convoy movements or transfers.',
   },
   {
     href: '/reminders',
-    icon: '🔔',
+    icon: Bell,
     title: 'Reminders',
-    color: '#fb7185',
+    color: 'var(--t-danger)',
     desc: 'Set personal reminders for tide-sensitive events — drydock entry, cargo loading, vessel departure, sea trials, and more. Upcoming reminders appear as a strip on the Home page. All data is stored locally in your browser.',
   },
 ]
 
 const PHASES = [
-  { name: 'Spring',       color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.35)', desc: 'New or full moon — maximum tidal range. Highest HW, lowest LW. Best for deep-draught vessel access.' },
-  { name: 'Near Spring',  color: '#fb923c', bg: 'rgba(251,146,60,0.12)', border: 'rgba(251,146,60,0.32)', desc: '1–2 days either side of spring. Range still large, approaching or leaving maximum.' },
-  { name: 'Intermediate', color: '#0DC8C8', bg: 'rgba(10,150,150,0.10)', border: 'rgba(10,150,150,0.30)', desc: 'Midway between spring and neap. Moderate range — average planning conditions.' },
-  { name: 'Near Neap',    color: '#a78bfa', bg: 'rgba(139,92,246,0.12)', border: 'rgba(139,92,246,0.35)', desc: '1–2 days from neap. Range is shrinking or growing toward neap tides.' },
-  { name: 'Neap',         color: '#38bdf8', bg: 'rgba(56,189,248,0.12)', border: 'rgba(56,189,248,0.35)', desc: 'Quarter moon — minimum tidal range. Smallest HW/LW difference. Preferred for harbour maintenance, berthing of shallow-draught vessels.' },
+  { name: 'Spring',       color: 'var(--accent-hw)', bg: 'color-mix(in srgb, var(--accent-hw) 12%, transparent)', border: 'color-mix(in srgb, var(--accent-hw) 35%, transparent)', desc: 'New or full moon — maximum tidal range. Highest HW, lowest LW. Best for deep-draught vessel access.' },
+  { name: 'Near Spring',  color: 'var(--spark)', bg: 'color-mix(in srgb, var(--spark) 12%, transparent)', border: 'color-mix(in srgb, var(--spark) 32%, transparent)', desc: '1–2 days either side of spring. Range still large, approaching or leaving maximum.' },
+  { name: 'Intermediate', color: 'var(--g1)', bg: 'color-mix(in srgb, var(--g1) 10%, transparent)', border: 'color-mix(in srgb, var(--g1) 30%, transparent)', desc: 'Midway between spring and neap. Moderate range — average planning conditions.' },
+  { name: 'Near Neap',    color: 'var(--g3)', bg: 'color-mix(in srgb, var(--g3) 12%, transparent)', border: 'color-mix(in srgb, var(--g3) 35%, transparent)', desc: '1–2 days from neap. Range is shrinking or growing toward neap tides.' },
+  { name: 'Neap',         color: 'var(--accent-lw)', bg: 'color-mix(in srgb, var(--accent-lw) 12%, transparent)', border: 'color-mix(in srgb, var(--accent-lw) 35%, transparent)', desc: 'Quarter moon — minimum tidal range. Smallest HW/LW difference. Preferred for harbour maintenance, berthing of shallow-draught vessels.' },
 ]
 
 const GLOSSARY = [
@@ -79,13 +80,13 @@ const GLOSSARY = [
 ]
 
 const TIPS = [
-  { icon: '⚓', text: 'For vessel arrival planning, use the Monthly view to find spring tide windows with the highest HW, then drill into Daily for exact times.' },
-  { icon: '🏗️', text: 'For drydock or slipway operations, Annual shows the best months by port. Spring tides give maximum tidal drop for dry-docking.' },
-  { icon: '🚢', text: 'Use Compare to check if two ports have HW at similar times — useful for coordinating multi-port convoy schedules.' },
-  { icon: '📍', text: 'Gulf of Khambhat ports (Dahej, Bhavnagar) have India\'s largest tidal ranges (7–9 m spring). Always verify keel clearance before entry.' },
-  { icon: '🔔', text: 'Set a Reminder for your drydock date or sea trial window so it shows up on the Home page countdown.' },
-  { icon: '🕐', text: 'Toggle between 24h and 12h time format using the "24h / 12h" button in the top-right of the navbar.' },
-  { icon: '🌗', text: 'Tide predictions are harmonic — they use published NHO and Admiralty constants. For safety-critical navigation, always cross-check with the official NHO India Annual Tide Tables.' },
+  { icon: Anchor, text: 'For vessel arrival planning, use the Monthly view to find spring tide windows with the highest HW, then drill into Daily for exact times.' },
+  { icon: Construction, text: 'For drydock or slipway operations, Annual shows the best months by port. Spring tides give maximum tidal drop for dry-docking.' },
+  { icon: Ship, text: 'Use Compare to check if two ports have HW at similar times — useful for coordinating multi-port convoy schedules.' },
+  { icon: MapPin, text: 'Gulf of Khambhat ports (Dahej, Bhavnagar) have India\'s largest tidal ranges (7–9 m spring). Always verify keel clearance before entry.' },
+  { icon: Bell, text: 'Set a Reminder for your drydock date or sea trial window so it shows up on the Home page countdown.' },
+  { icon: Clock, text: 'Toggle between 24h and 12h time format using the "24h / 12h" button in the top-right of the navbar.' },
+  { icon: Moon, text: 'Tide predictions are harmonic — they use published NHO and Admiralty constants. For safety-critical navigation, always cross-check with the official NHO India Annual Tide Tables.' },
 ]
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -101,11 +102,11 @@ export default function GuidePage() {
       <div className="ocean-bg py-10">
         <div className="container-tp">
           <span className="section-tag mb-3"
-            style={{ color: 'rgba(255,255,255,0.90)', background: 'rgba(255,255,255,0.12)', borderColor: 'rgba(255,255,255,0.25)' }}>
+            style={{ color: 'color-mix(in srgb, var(--ink) 90%, transparent)', background: 'color-mix(in srgb, var(--ink) 12%, transparent)', borderColor: 'color-mix(in srgb, var(--ink) 25%, transparent)' }}>
             📖 User Guide
           </span>
           <h1 className="font-display font-bold text-3xl mt-2 hero-gradient-text">How to Use TidePilot</h1>
-          <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.72)', maxWidth: 520 }}>
+          <p className="mt-1 text-sm" style={{ color: 'color-mix(in srgb, var(--ink) 72%, transparent)', maxWidth: 520 }}>
             Harmonic tide predictions for 12 major Indian ports — everything you need to plan tide-sensitive marine operations.
           </p>
         </div>
@@ -141,7 +142,7 @@ export default function GuidePage() {
                 style={{ textDecoration: 'none' }}
               >
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="text-2xl">{v.icon}</span>
+                  <v.icon size={22} style={{ color: v.color, flexShrink: 0 }} aria-hidden="true" />
                   <span className="font-display font-semibold text-sm" style={{ color: v.color }}>{v.title}</span>
                 </div>
                 <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{v.desc}</p>
@@ -156,7 +157,7 @@ export default function GuidePage() {
           <div className="glass-card p-5 space-y-4 text-sm" style={{ color: 'var(--text-secondary)' }}>
 
             <div className="flex items-start gap-3">
-              <span className="w-3 h-3 rounded-full flex-shrink-0 mt-1" style={{ background: '#0DC8C8' }} />
+              <span className="w-3 h-3 rounded-full flex-shrink-0 mt-1" style={{ background: 'var(--g1)' }} />
               <div>
                 <div className="font-semibold mb-0.5" style={{ color: 'var(--text-primary)' }}>Teal area — tide curve</div>
                 The filled area shows water height (metres above Chart Datum) across the 24-hour period. The curve rises to High Water and falls to Low Water roughly every 6 hours for semidiurnal ports.
@@ -164,7 +165,7 @@ export default function GuidePage() {
             </div>
 
             <div className="flex items-start gap-3">
-              <span className="w-3 h-3 rounded-full flex-shrink-0 mt-1" style={{ background: '#f59e0b' }} />
+              <span className="w-3 h-3 rounded-full flex-shrink-0 mt-1" style={{ background: 'var(--accent-hw)' }} />
               <div>
                 <div className="font-semibold mb-0.5" style={{ color: 'var(--text-primary)' }}>Amber dot — High Water (HW)</div>
                 Marked with the height in metres above the dot. This is when the tide is at its peak for that tidal cycle.
@@ -172,7 +173,7 @@ export default function GuidePage() {
             </div>
 
             <div className="flex items-start gap-3">
-              <span className="w-3 h-3 rounded-full flex-shrink-0 mt-1" style={{ background: '#38bdf8' }} />
+              <span className="w-3 h-3 rounded-full flex-shrink-0 mt-1" style={{ background: 'var(--accent-lw)' }} />
               <div>
                 <div className="font-semibold mb-0.5" style={{ color: 'var(--text-primary)' }}>Blue dot — Low Water (LW)</div>
                 Marked with the height below the dot. Most ports have LW near 0.5–1.0 m above Chart Datum. Kochi and Chennai have very small ranges.
@@ -180,7 +181,7 @@ export default function GuidePage() {
             </div>
 
             <div className="flex items-start gap-3">
-              <span className="w-3 h-3 rounded-full flex-shrink-0 mt-1" style={{ background: '#00d4aa' }} />
+              <span className="w-3 h-3 rounded-full flex-shrink-0 mt-1" style={{ background: 'var(--ok)' }} />
               <div>
                 <div className="font-semibold mb-0.5" style={{ color: 'var(--text-primary)' }}>Green dashed line — MSL</div>
                 Mean Sea Level for the port. Useful reference for air draught and bridge clearance estimates.
@@ -188,7 +189,7 @@ export default function GuidePage() {
             </div>
 
             <div className="flex items-start gap-3">
-              <span className="w-3 h-3 rounded-full flex-shrink-0 mt-1" style={{ background: '#ef4444' }} />
+              <span className="w-3 h-3 rounded-full flex-shrink-0 mt-1" style={{ background: 'var(--t-danger)' }} />
               <div>
                 <div className="font-semibold mb-0.5" style={{ color: 'var(--text-primary)' }}>Red vertical line — Now</div>
                 Appears only when viewing today. Shows the current time so you can read off the present water level from the curve.
@@ -225,7 +226,7 @@ export default function GuidePage() {
           <div className="glass-card overflow-hidden">
             <table className="w-full text-xs font-mono">
               <thead>
-                <tr style={{ background: 'rgba(10,150,150,0.10)', borderBottom: '1px solid var(--border)' }}>
+                <tr style={{ background: 'color-mix(in srgb, var(--g1) 10%, transparent)', borderBottom: '1px solid var(--border)' }}>
                   <th className="text-left px-4 py-2.5" style={{ color: 'var(--text-muted)' }}>PORT</th>
                   <th className="text-left px-4 py-2.5" style={{ color: 'var(--text-muted)' }}>REGION</th>
                   <th className="text-right px-4 py-2.5" style={{ color: 'var(--text-muted)' }}>SPRING RANGE</th>
@@ -250,11 +251,11 @@ export default function GuidePage() {
                   <tr key={p.name}
                     style={{
                       borderBottom: '1px solid var(--border)',
-                      background: i % 2 === 0 ? 'transparent' : 'rgba(10,150,150,0.03)',
+                      background: i % 2 === 0 ? 'transparent' : 'color-mix(in srgb, var(--g1) 3%, transparent)',
                     }}>
                     <td className="px-4 py-2.5 font-semibold" style={{ color: 'var(--text-primary)' }}>{p.name}</td>
                     <td className="px-4 py-2.5" style={{ color: 'var(--text-muted)' }}>{p.region}</td>
-                    <td className="px-4 py-2.5 text-right font-bold" style={{ color: '#0DC8C8' }}>{p.range}</td>
+                    <td className="px-4 py-2.5 text-right font-bold" style={{ color: 'var(--g1)' }}>{p.range}</td>
                     <td className="px-4 py-2.5" style={{ color: 'var(--text-muted)' }}>{p.note}</td>
                   </tr>
                 ))}
@@ -269,7 +270,7 @@ export default function GuidePage() {
           <div className="glass-card divide-y" style={{ borderColor: 'var(--border)' }}>
             {GLOSSARY.map(g => (
               <div key={g.term} className="flex gap-4 px-5 py-3 items-baseline">
-                <span className="font-mono font-bold text-xs flex-shrink-0 w-24" style={{ color: '#0DC8C8' }}>{g.term}</span>
+                <span className="font-mono font-bold text-xs flex-shrink-0 w-24" style={{ color: 'var(--g1)' }}>{g.term}</span>
                 <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{g.def}</span>
               </div>
             ))}
@@ -282,7 +283,7 @@ export default function GuidePage() {
           <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
             {TIPS.map((t, i) => (
               <div key={i} className="glass-card p-4 flex gap-3">
-                <span className="text-lg flex-shrink-0">{t.icon}</span>
+                <t.icon size={18} style={{ color: 'var(--g3)', flexShrink: 0, marginTop: 1 }} aria-hidden="true" />
                 <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{t.text}</p>
               </div>
             ))}
@@ -291,8 +292,8 @@ export default function GuidePage() {
 
         {/* Disclaimer */}
         <section>
-          <div className="glass-card p-5 text-xs leading-relaxed" style={{ color: 'var(--text-muted)', borderLeft: '3px solid rgba(245,158,11,0.60)' }}>
-            <strong style={{ color: '#f59e0b' }}>Disclaimer — </strong>
+          <div className="glass-card p-5 text-xs leading-relaxed" style={{ color: 'var(--text-muted)', borderLeft: '3px solid color-mix(in srgb, var(--accent-hw) 60%, transparent)' }}>
+            <strong style={{ color: 'var(--accent-hw)' }}>Disclaimer — </strong>
             TidePilot predictions are based on harmonic constants from NHO India Tide Tables and Admiralty Tide Tables Vol. 4. Predictions may differ from observed tides due to meteorological surge, river discharge, and local bathymetric effects. <strong style={{ color: 'var(--text-secondary)' }}>Always cross-check with official NHO India Annual Tide Tables before any safety-critical operation.</strong>
           </div>
         </section>

@@ -63,11 +63,11 @@ export default function AnnualPage() {
       <div className="ocean-bg py-10">
         <div className="container-tp">
           <span className="section-tag mb-3"
-            style={{ color: 'rgba(255,255,255,0.90)', background: 'rgba(255,255,255,0.12)', borderColor: 'rgba(255,255,255,0.25)' }}>
+            style={{ color: 'color-mix(in srgb, var(--ink) 90%, transparent)', background: 'color-mix(in srgb, var(--ink) 12%, transparent)', borderColor: 'color-mix(in srgb, var(--ink) 25%, transparent)' }}>
             📆 Annual View
           </span>
           <h1 className="font-display font-bold text-3xl mt-2 hero-gradient-text">Annual Tide Tables</h1>
-          <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.72)' }}>
+          <p className="mt-1 text-sm" style={{ color: 'color-mix(in srgb, var(--ink) 72%, transparent)' }}>
             Year-round tidal extremes — for shipbuilding, dry-dock &amp; launch planning
           </p>
         </div>
@@ -97,7 +97,7 @@ export default function AnnualPage() {
           </div>
           <button onClick={() => setYear(currentYear)}
             className="px-3 py-2 rounded-lg text-xs font-mono font-semibold hover:opacity-80"
-            style={{ background: 'rgba(10,150,150,0.14)', border: '1px solid rgba(10,150,150,0.32)', color: '#0DC8C8' }}>
+            style={{ background: 'color-mix(in srgb, var(--g1) 14%, transparent)', border: '1px solid color-mix(in srgb, var(--g1) 32%, transparent)', color: 'var(--g1)' }}>
             This Year
           </button>
         </div>
@@ -105,40 +105,40 @@ export default function AnnualPage() {
         {/* Year summary stats */}
         <div className="grid grid-cols-3 gap-3">
           <div className="glass-card p-3 text-center">
-            <div className="text-xl font-display font-bold" style={{ color: '#f59e0b' }}>{yearPeakHW.toFixed(2)} m</div>
+            <div className="text-xl font-display font-bold" style={{ color: 'var(--accent-hw)' }}>{yearPeakHW.toFixed(2)} m</div>
             <div className="text-xs font-mono mt-0.5" style={{ color: 'var(--text-muted)' }}>Highest HW of Year</div>
           </div>
           <div className="glass-card p-3 text-center">
-            <div className="text-xl font-display font-bold" style={{ color: '#38bdf8' }}>{yearLowestLW.toFixed(2)} m</div>
+            <div className="text-xl font-display font-bold" style={{ color: 'var(--accent-lw)' }}>{yearLowestLW.toFixed(2)} m</div>
             <div className="text-xs font-mono mt-0.5" style={{ color: 'var(--text-muted)' }}>Lowest LW of Year</div>
           </div>
           <div className="glass-card p-3 text-center">
-            <div className="text-base font-display font-bold" style={{ color: '#0DC8C8' }}>{bestLaunchMonths}</div>
+            <div className="text-base font-display font-bold" style={{ color: 'var(--g1)' }}>{bestLaunchMonths}</div>
             <div className="text-xs font-mono mt-0.5" style={{ color: 'var(--text-muted)' }}>Best Launch Months</div>
           </div>
         </div>
 
         {/* Shipbuilding notes panel */}
         <div className="glass-card p-4"
-          style={{ background: 'rgba(10,150,150,0.06)', border: '1px solid rgba(13,200,200,0.22)' }}>
-          <h3 className="font-mono text-xs font-bold mb-3 uppercase tracking-widest" style={{ color: '#0DC8C8' }}>
+          style={{ background: 'color-mix(in srgb, var(--g1) 6%, transparent)', border: '1px solid color-mix(in srgb, var(--g1) 22%, transparent)' }}>
+          <h3 className="font-mono text-xs font-bold mb-3 uppercase tracking-widest" style={{ color: 'var(--g1)' }}>
             ⚓ Shipbuilding Planning Guide
           </h3>
           <div className="grid grid-cols-1 gap-2 text-xs" style={{ color: 'var(--text-secondary)' }}>
             <div className="flex gap-2">
-              <span style={{ color: '#f59e0b', flexShrink: 0 }}>▲</span>
+              <span style={{ color: 'var(--accent-hw)', flexShrink: 0 }}>▲</span>
               <span><strong style={{ color: 'var(--text-primary)' }}>Launch window</strong> — Use spring HW months ({bestLaunchMonths}) for maximum water depth during float-out</span>
             </div>
             <div className="flex gap-2">
-              <span style={{ color: '#38bdf8', flexShrink: 0 }}>▼</span>
+              <span style={{ color: 'var(--accent-lw)', flexShrink: 0 }}>▼</span>
               <span><strong style={{ color: 'var(--text-primary)' }}>Dry-dock entry / exit</strong> — Spring tides give both maximum HW (for floating in) and lowest LW (for hull exposure)</span>
             </div>
             <div className="flex gap-2">
-              <span style={{ color: '#818cf8', flexShrink: 0 }}>≈</span>
+              <span style={{ color: 'var(--g3)', flexShrink: 0 }}>≈</span>
               <span><strong style={{ color: 'var(--text-primary)' }}>Sea trials</strong> — Neap periods give calmer, more predictable tidal streams for manoeuvring trials</span>
             </div>
             <div className="flex gap-2">
-              <span style={{ color: '#0DC8C8', flexShrink: 0 }}>◎</span>
+              <span style={{ color: 'var(--g1)', flexShrink: 0 }}>◎</span>
               <span><strong style={{ color: 'var(--text-primary)' }}>HAT / LAT planning</strong> — Highest and lowest values in the table approximate HAT/LAT for the year — compare against vessel air-draft and keel clearance</span>
             </div>
           </div>
@@ -151,10 +151,10 @@ export default function AnnualPage() {
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg-card)' }}>
                   <th className="px-4 py-2.5 text-left font-mono"  style={{ color: 'var(--text-muted)' }}>Month</th>
-                  <th className="px-4 py-2.5 text-right font-mono" style={{ color: '#f59e0b' }}>Peak HW (m)</th>
-                  <th className="px-4 py-2.5 text-right font-mono" style={{ color: '#38bdf8' }}>Lowest LW (m)</th>
-                  <th className="px-4 py-2.5 text-right font-mono" style={{ color: '#0DC8C8' }}>Range (m)</th>
-                  <th className="px-4 py-2.5 text-right font-mono" style={{ color: '#f59e0b' }}>Spring Days</th>
+                  <th className="px-4 py-2.5 text-right font-mono" style={{ color: 'var(--accent-hw)' }}>Peak HW (m)</th>
+                  <th className="px-4 py-2.5 text-right font-mono" style={{ color: 'var(--accent-lw)' }}>Lowest LW (m)</th>
+                  <th className="px-4 py-2.5 text-right font-mono" style={{ color: 'var(--g1)' }}>Range (m)</th>
+                  <th className="px-4 py-2.5 text-right font-mono" style={{ color: 'var(--accent-hw)' }}>Spring Days</th>
                   <th className="px-4 py-2.5 text-left font-mono"  style={{ color: 'var(--text-muted)' }}>Best Use</th>
                 </tr>
               </thead>
@@ -168,27 +168,27 @@ export default function AnnualPage() {
                         {MONTH_SHORT[row.month]}
                       </td>
                       <td className="px-4 py-2.5 text-right font-mono">
-                        <span style={{ color: isYearPeak ? '#f59e0b' : 'var(--text-primary)', fontWeight: isYearPeak ? 700 : 400 }}>
+                        <span style={{ color: isYearPeak ? 'var(--accent-hw)' : 'var(--text-primary)', fontWeight: isYearPeak ? 700 : 400 }}>
                           {row.peakHW.height.toFixed(2)}
                         </span>
-                        {isYearPeak && <span className="ml-1 text-[9px] font-bold" style={{ color: '#f59e0b' }}>▲HAT</span>}
+                        {isYearPeak && <span className="ml-1 text-[9px] font-bold" style={{ color: 'var(--accent-hw)' }}>▲HAT</span>}
                       </td>
                       <td className="px-4 py-2.5 text-right font-mono">
-                        <span style={{ color: isYearLow ? '#38bdf8' : 'var(--text-primary)', fontWeight: isYearLow ? 700 : 400 }}>
+                        <span style={{ color: isYearLow ? 'var(--accent-lw)' : 'var(--text-primary)', fontWeight: isYearLow ? 700 : 400 }}>
                           {row.lowestLW.height.toFixed(2)}
                         </span>
-                        {isYearLow && <span className="ml-1 text-[9px] font-bold" style={{ color: '#38bdf8' }}>▼LAT</span>}
+                        {isYearLow && <span className="ml-1 text-[9px] font-bold" style={{ color: 'var(--accent-lw)' }}>▼LAT</span>}
                       </td>
                       <td className="px-4 py-2.5 text-right font-mono" style={{ color: 'var(--text-secondary)' }}>
                         {row.range}
                       </td>
                       <td className="px-4 py-2.5 text-right font-mono">
-                        <span style={{ color: row.springDays >= 10 ? '#f59e0b' : 'var(--text-secondary)' }}>
+                        <span style={{ color: row.springDays >= 10 ? 'var(--accent-hw)' : 'var(--text-secondary)' }}>
                           {row.springDays}
                         </span>
                       </td>
                       <td className="px-4 py-2.5 font-mono"
-                        style={{ color: row.bestUse === 'Launch / Dry-dock' ? '#0DC8C8' : 'var(--text-muted)' }}>
+                        style={{ color: row.bestUse === 'Launch / Dry-dock' ? 'var(--g1)' : 'var(--text-muted)' }}>
                         {row.bestUse}
                       </td>
                     </tr>

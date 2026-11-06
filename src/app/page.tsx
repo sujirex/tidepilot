@@ -6,6 +6,7 @@ import {
   ReferenceLine, ReferenceDot,
 } from 'recharts'
 import {
+  Waves, CloudRain, Tornado, Anchor,
   Navigation, TrendingUp, TrendingDown, Clock,
   ChevronLeft, ChevronRight, Droplets, Calendar,
 } from 'lucide-react'
@@ -75,43 +76,43 @@ function TideTooltip({ active, payload, label }: {
 }
 
 const PHASE_STYLE: Record<TidalPhase, { bg: string; color: string; border: string }> = {
-  'Spring':       { bg: 'rgba(245,158,11,0.15)', color: '#f59e0b', border: 'rgba(245,158,11,0.40)' },
-  'Near Spring':  { bg: 'rgba(251,191,36,0.12)', color: '#fbbf24', border: 'rgba(251,191,36,0.35)' },
-  'Intermediate': { bg: 'rgba(10,150,150,0.10)',  color: '#0DC8C8', border: 'rgba(10,150,150,0.30)' },
-  'Near Neap':    { bg: 'rgba(139,92,246,0.12)', color: '#a78bfa', border: 'rgba(139,92,246,0.35)' },
-  'Neap':         { bg: 'rgba(56,189,248,0.12)', color: '#38bdf8', border: 'rgba(56,189,248,0.35)' },
+  'Spring':       { bg: 'color-mix(in srgb, var(--accent-hw) 15%, transparent)', color: 'var(--accent-hw)', border: 'color-mix(in srgb, var(--accent-hw) 40%, transparent)' },
+  'Near Spring':  { bg: 'color-mix(in srgb, var(--accent-hw) 12%, transparent)', color: 'var(--accent-hw)', border: 'color-mix(in srgb, var(--accent-hw) 35%, transparent)' },
+  'Intermediate': { bg: 'color-mix(in srgb, var(--g1) 10%, transparent)',  color: 'var(--g1)', border: 'color-mix(in srgb, var(--g1) 30%, transparent)' },
+  'Near Neap':    { bg: 'color-mix(in srgb, var(--g3) 12%, transparent)', color: 'var(--g3)', border: 'color-mix(in srgb, var(--g3) 35%, transparent)' },
+  'Neap':         { bg: 'color-mix(in srgb, var(--accent-lw) 12%, transparent)', color: 'var(--accent-lw)', border: 'color-mix(in srgb, var(--accent-lw) 35%, transparent)' },
 }
 
 // ─── Live Indian Coast Links ───────────────────────────────────────────────────
 
 const COAST_LINKS = [
   {
-    icon: '🌊',
+    icon: Waves,
     label: 'INCOIS Ocean Services',
     sub: 'Waves · Currents · Tsunami alerts',
     url: 'https://incois.gov.in/site/index.jsp',
-    color: '#0DC8C8',
+    color: 'var(--g1)',
   },
   {
-    icon: '🌧️',
+    icon: CloudRain,
     label: 'IMD Weather Warnings',
     sub: 'Storm · Wind · Rain bulletins',
     url: 'https://mausam.imd.gov.in/',
-    color: '#f97316',
+    color: 'var(--spark)',
   },
   {
-    icon: '🌀',
+    icon: Tornado,
     label: 'IMD Weather & Cyclone',
     sub: 'Storm · Cyclone · Weather warnings',
     url: 'https://mausam.imd.gov.in/index_en.php',
-    color: '#ef4444',
+    color: 'var(--t-danger)',
   },
   {
-    icon: '⚓',
+    icon: Anchor,
     label: 'Indian Coast Guard',
     sub: 'Maritime safety · Distress alerts',
     url: 'https://www.indiancoastguard.gov.in/',
-    color: '#f59e0b',
+    color: 'var(--accent-hw)',
   },
 ]
 
@@ -120,7 +121,7 @@ function LiveCoastLinks() {
     <section style={{ background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
       <div className="container-tp py-4">
         <div className="flex items-center gap-2 mb-3">
-          <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#ef4444', boxShadow: '0 0 4px #ef4444' }} />
+          <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--t-danger)', boxShadow: '0 0 4px var(--t-danger)' }} />
           <span className="font-mono font-semibold" style={{ fontSize: '0.68rem', letterSpacing: '0.10em', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
             Live Indian Coast — View on Official Sources
           </span>
@@ -135,12 +136,12 @@ function LiveCoastLinks() {
               className="flex items-center gap-3 rounded-xl transition-all hover:opacity-75"
               style={{
                 padding: '10px 14px',
-                background: `${link.color}0D`,
-                border: `1px solid ${link.color}28`,
+                background: `color-mix(in srgb, ${link.color} 5%, transparent)`,
+                border: `1px solid color-mix(in srgb, ${link.color} 16%, transparent)`,
                 textDecoration: 'none',
               }}
             >
-              <span style={{ fontSize: '1.25rem', flexShrink: 0 }}>{link.icon}</span>
+              <link.icon size={20} style={{ flexShrink: 0, color: link.color }} aria-hidden="true" />
               <div className="min-w-0">
                 <div className="flex items-center gap-1 font-semibold" style={{ fontSize: '0.8rem', color: link.color }}>
                   {link.label}
@@ -177,7 +178,7 @@ function MiniRemindersStrip() {
   if (reminders.length === 0) return null
 
   return (
-    <div style={{ background: 'rgba(2,13,13,0.50)', borderBottom: '1px solid rgba(10,150,150,0.22)' }}>
+    <div style={{ background: 'color-mix(in srgb, var(--inset) 70%, transparent)', borderBottom: '1px solid color-mix(in srgb, var(--g1) 22%, transparent)' }}>
       <div className="container-tp py-2">
         <div className="flex items-center gap-3 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
           <span className="text-[10px] font-mono font-semibold flex-shrink-0" style={{ color: 'var(--accent-cyan)' }}>
@@ -186,20 +187,20 @@ function MiniRemindersStrip() {
           {reminders.map(r => {
             const ev = getEventType(r.typeId)
             const { text, urgency } = countdownLabel(r.date)
-            const badgeColor = urgency === 'today' ? '#f59e0b' : urgency === 'soon' ? '#34d399' : '#60a5fa'
+            const badgeColor = urgency === 'today' ? 'var(--accent-hw)' : urgency === 'soon' ? 'var(--ok)' : 'var(--g2)'
             return (
               <a
                 key={r.id}
                 href="/reminders"
                 className="flex items-center gap-1.5 px-3 py-1 rounded-full flex-shrink-0 transition-opacity hover:opacity-80"
                 style={{
-                  background: `${ev.color}14`,
-                  border: `1px solid ${ev.color}30`,
+                  background: `color-mix(in srgb, ${ev.color} 8%, transparent)`,
+                  border: `1px solid color-mix(in srgb, ${ev.color} 19%, transparent)`,
                   textDecoration: 'none',
                 }}
               >
                 <span style={{ fontSize: '0.75rem' }}>{ev.icon}</span>
-                <span className="text-[11px] font-medium max-w-[120px] truncate" style={{ color: '#ddeeff' }}>
+                <span className="text-[11px] font-medium max-w-[120px] truncate" style={{ color: 'var(--ink)' }}>
                   {r.title}
                 </span>
                 <span className="text-[10px] font-mono font-bold" style={{ color: badgeColor }}>
@@ -224,21 +225,11 @@ function MiniRemindersStrip() {
 /** Decorative wave emblem (hero watermark) */
 function HeroEmblem() {
   return (
-    <svg width="180" height="180" viewBox="0 0 32 32" fill="none"
-      aria-hidden="true"
-      style={{ position: 'absolute', right: '5%', top: '50%', transform: 'translateY(-50%)', opacity: 0.08 }}>
-      <defs>
-        <linearGradient id="heroGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#0A9696" />
-          <stop offset="100%" stopColor="#0DC8C8" />
-        </linearGradient>
-      </defs>
-      <rect width="32" height="32" rx="7" fill="url(#heroGrad)" />
-      <path d="M4 13 C8.5 8, 12 18, 16 13 C20 8, 23.5 18, 28 13"
-        stroke="white" strokeWidth="2" strokeLinecap="round" />
-      <path d="M4 21 C8.5 15, 12 26, 16 21 C20 15, 23.5 26, 28 21"
-        stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src="/ss-emblem.svg" alt="" aria-hidden="true" width={150} height={150}
+      className="hidden md:block"
+      style={{ position: 'absolute', right: '6%', top: '50%', transform: 'translateY(-50%)', borderRadius: 36,
+               boxShadow: '0 30px 80px -30px var(--g3)', opacity: 0.95 }} />
   )
 }
 
@@ -345,12 +336,12 @@ export default function HomePage() {
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <section className="ocean-bg relative py-14 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse at 20% 50%, rgba(10,150,150,0.14) 0%, transparent 60%)' }} />
+          style={{ background: 'radial-gradient(ellipse at 20% 50%, color-mix(in srgb, var(--g1) 14%, transparent) 0%, transparent 60%)' }} />
         <HeroEmblem />
 
         <div className="container-tp relative z-10">
           <div className="section-tag mb-5"
-            style={{ color: 'rgba(255,255,255,0.90)', background: 'rgba(255,255,255,0.15)', borderColor: 'rgba(255,255,255,0.30)' }}>
+            style={{ color: 'color-mix(in srgb, var(--ink) 90%, transparent)', background: 'color-mix(in srgb, var(--ink) 15%, transparent)', borderColor: 'color-mix(in srgb, var(--ink) 30%, transparent)' }}>
             <svg width="12" height="12" viewBox="0 0 32 32" fill="none" aria-hidden="true">
               <path d="M4 21 C8.5 15, 12 26, 16 21 C20 15, 23.5 26, 28 21"
                 stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
@@ -358,13 +349,13 @@ export default function HomePage() {
             Tide Intelligence
           </div>
           <h1 className="font-display font-bold leading-tight mb-3"
-            style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#ffffff' }}>
+            style={{ fontSize: 'clamp(2.2rem, 5vw, 3.6rem)', color: 'var(--ink)', letterSpacing: '-.04em' }}>
             <span className="hero-gradient-text">TidePilot</span>
           </h1>
-          <p className="text-sm mb-2" style={{ color: 'rgba(255,255,255,0.88)', maxWidth: 480 }}>
+          <p className="text-sm mb-2" style={{ color: 'color-mix(in srgb, var(--ink) 88%, transparent)', maxWidth: 480 }}>
             Harmonic tide predictions for 12 major Indian ports — Daily, Weekly, Monthly, Annual and Port Comparison.
           </p>
-          <p className="text-xs font-mono" style={{ color: 'rgba(255,255,255,0.58)' }}>
+          <p className="text-xs font-mono" style={{ color: 'color-mix(in srgb, var(--ink) 58%, transparent)' }}>
             NHO Official · TPXO9 Global Model · Admiralty Tide Tables
           </p>
 
@@ -377,8 +368,8 @@ export default function HomePage() {
               marginTop: 18,
               padding: '8px 16px',
               borderRadius: 24,
-              background: 'rgba(13, 200, 200, 0.15)',
-              border: '1px solid rgba(13, 200, 200, 0.45)',
+              background: 'color-mix(in srgb, var(--g1) 15%, transparent)',
+              border: '1px solid color-mix(in srgb, var(--g1) 45%, transparent)',
               cursor: 'pointer',
               backdropFilter: 'blur(8px)',
             }}
@@ -388,14 +379,14 @@ export default function HomePage() {
               <span style={{
                 fontSize: '0.78rem',
                 fontWeight: 700,
-                color: '#0DC8C8',
+                color: 'var(--g1)',
                 letterSpacing: '0.03em',
               }}>
                 Ask REX — Free AI
               </span>
               <span style={{
                 fontSize: '0.72rem',
-                color: 'rgba(255,255,255,0.55)',
+                color: 'color-mix(in srgb, var(--ink) 55%, transparent)',
                 marginLeft: 8,
               }}>
                 "High tide at Kandla tomorrow?" · Tap 👑 below →
@@ -478,7 +469,7 @@ export default function HomePage() {
                   <button
                     onClick={() => setSelectedDate(todayIST())}
                     className="px-2 py-2 rounded-lg text-xs font-mono transition-colors"
-                    style={{ background: 'rgba(0,212,170,0.10)', border: '1px solid rgba(0,212,170,0.30)', color: 'var(--accent-cyan)' }}
+                    style={{ background: 'color-mix(in srgb, var(--ok) 10%, transparent)', border: '1px solid color-mix(in srgb, var(--ok) 30%, transparent)', color: 'var(--accent-cyan)' }}
                     aria-label="Go to today"
                   >
                     <Calendar className="w-4 h-4" />
@@ -549,8 +540,8 @@ export default function HomePage() {
                   <AreaChart data={chartData} margin={{ top: 14, right: 10, bottom: 0, left: -10 }}>
                     <defs>
                       <linearGradient id="tideGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%"  stopColor="#0A9696" stopOpacity={0.38} />
-                        <stop offset="95%" stopColor="#0A9696" stopOpacity={0.02} />
+                        <stop offset="5%"  stopColor="var(--g1)" stopOpacity={0.38} />
+                        <stop offset="95%" stopColor="var(--g1)" stopOpacity={0.02} />
                       </linearGradient>
                     </defs>
 
@@ -573,9 +564,9 @@ export default function HomePage() {
                     {/* MSL reference line */}
                     <ReferenceLine
                       y={port.constituents.Z0}
-                      stroke="rgba(0,212,170,0.30)"
+                      stroke="color-mix(in srgb, var(--ok) 30%, transparent)"
                       strokeDasharray="4 4"
-                      label={{ value: 'MSL', fill: '#00d4aa', fontSize: 9 }}
+                      label={{ value: 'MSL', fill: 'var(--ok)', fontSize: 9 }}
                     />
 
                     {/* HW dots */}
@@ -585,10 +576,10 @@ export default function HomePage() {
                         x={ev.chartX}
                         y={ev.height}
                         r={5}
-                        fill="#f59e0b"
+                        fill="var(--accent-hw)"
                         stroke="var(--bg-surface)"
                         strokeWidth={1.5}
-                        label={{ value: `${ev.height.toFixed(1)}m`, position: 'top', fontSize: 9, fill: '#f59e0b' }}
+                        label={{ value: `${ev.height.toFixed(1)}m`, position: 'top', fontSize: 9, fill: 'var(--accent-hw)' }}
                       />
                     ))}
 
@@ -599,10 +590,10 @@ export default function HomePage() {
                         x={ev.chartX}
                         y={ev.height}
                         r={5}
-                        fill="#38bdf8"
+                        fill="var(--accent-lw)"
                         stroke="var(--bg-surface)"
                         strokeWidth={1.5}
-                        label={{ value: `${ev.height.toFixed(1)}m`, position: 'bottom', fontSize: 9, fill: '#38bdf8' }}
+                        label={{ value: `${ev.height.toFixed(1)}m`, position: 'bottom', fontSize: 9, fill: 'var(--accent-lw)' }}
                       />
                     ))}
 
@@ -610,20 +601,20 @@ export default function HomePage() {
                     {isToday && nowLabel && (
                       <ReferenceLine
                         x={nowLabel}
-                        stroke="rgba(255,255,255,0.35)"
+                        stroke="color-mix(in srgb, var(--ink) 35%, transparent)"
                         strokeDasharray="3 3"
-                        label={{ value: 'NOW', fill: 'rgba(255,255,255,0.55)', fontSize: 8, position: 'top' }}
+                        label={{ value: 'NOW', fill: 'color-mix(in srgb, var(--ink) 55%, transparent)', fontSize: 8, position: 'top' }}
                       />
                     )}
 
                     <Area
                       type="monotone"
                       dataKey="h"
-                      stroke="#0A9696"
+                      stroke="var(--g1)"
                       strokeWidth={2}
                       fill="url(#tideGrad)"
                       dot={false}
-                      activeDot={{ r: 4, fill: '#0DC8C8', strokeWidth: 0 }}
+                      activeDot={{ r: 4, fill: 'var(--g1)', strokeWidth: 0 }}
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -664,7 +655,7 @@ export default function HomePage() {
                           className="h-full rounded-full transition-all duration-1000"
                           style={{
                             width: `${fillPct}%`,
-                            background: `linear-gradient(90deg, #0A9696, ${fillPct > 70 ? '#f59e0b' : '#0DC8C8'})`,
+                            background: `linear-gradient(90deg, var(--g1), ${fillPct > 70 ? 'var(--accent-hw)' : 'var(--g1)'})`,
                           }}
                         />
                       </div>
@@ -756,7 +747,7 @@ export default function HomePage() {
                   key={p.id}
                   onClick={() => setPortId(p.id)}
                   className="glass-card p-4 text-left transition-all"
-                  style={portId === p.id ? { borderColor: 'var(--accent-blue)', background: 'rgba(10,150,150,0.10)' } : {}}
+                  style={portId === p.id ? { borderColor: 'var(--accent-blue)', background: 'color-mix(in srgb, var(--g1) 10%, transparent)' } : {}}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-display font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>
@@ -788,12 +779,7 @@ export default function HomePage() {
         <div className="container-tp text-center text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
           <p>TidePilot &middot; Harmonic tide predictions for Indian ports</p>
           <p className="mt-1">
-            Built by{' '}
-            <a href="https://sujikumar.com" target="_blank" rel="noopener noreferrer"
-              style={{ color: 'var(--accent-cyan)' }}>
-              Suji Kumar C
-            </a>
-            {' '}&middot; Data: ATT Vol. 4 &middot; NHO India &middot; TPXO9
+            Data: ATT Vol. 4 &middot; NHO India &middot; TPXO9
           </p>
           <p className="mt-1 text-[10px]" style={{ color: 'var(--text-muted)', opacity: 0.6 }}>
             For navigation purposes, always verify against official NHO India Tide Tables.

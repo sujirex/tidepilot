@@ -9,11 +9,11 @@ import { dailyHWLW, tidalPhase, toIST } from '@/lib/tideEngine'
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const PHASE_STYLE: Record<string, { color: string; bg: string; border: string }> = {
-  'Spring':       { color: '#f59e0b', bg: 'rgba(245,158,11,0.12)',  border: 'rgba(245,158,11,0.32)'  },
-  'Near Spring':  { color: '#fb923c', bg: 'rgba(251,146,60,0.12)',  border: 'rgba(251,146,60,0.32)'  },
-  'Intermediate': { color: '#0DC8C8', bg: 'rgba(10,150,150,0.10)',  border: 'rgba(10,150,150,0.32)'  },
-  'Near Neap':    { color: '#38bdf8', bg: 'rgba(56,189,248,0.10)',  border: 'rgba(56,189,248,0.28)'  },
-  'Neap':         { color: '#818cf8', bg: 'rgba(129,140,248,0.10)', border: 'rgba(129,140,248,0.28)' },
+  'Spring':       { color: 'var(--accent-hw)', bg: 'color-mix(in srgb, var(--accent-hw) 12%, transparent)',  border: 'color-mix(in srgb, var(--accent-hw) 32%, transparent)'  },
+  'Near Spring':  { color: 'var(--spark)', bg: 'color-mix(in srgb, var(--spark) 12%, transparent)',  border: 'color-mix(in srgb, var(--spark) 32%, transparent)'  },
+  'Intermediate': { color: 'var(--g1)', bg: 'color-mix(in srgb, var(--g1) 10%, transparent)',  border: 'color-mix(in srgb, var(--g1) 32%, transparent)'  },
+  'Near Neap':    { color: 'var(--accent-lw)', bg: 'color-mix(in srgb, var(--accent-lw) 10%, transparent)',  border: 'color-mix(in srgb, var(--accent-lw) 28%, transparent)'  },
+  'Neap':         { color: 'var(--g3)', bg: 'color-mix(in srgb, var(--g3) 10%, transparent)', border: 'color-mix(in srgb, var(--g3) 28%, transparent)' },
 }
 
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -84,11 +84,11 @@ export default function WeeklyPage() {
       <div className="ocean-bg py-10">
         <div className="container-tp">
           <span className="section-tag mb-3"
-            style={{ color: 'rgba(255,255,255,0.90)', background: 'rgba(255,255,255,0.12)', borderColor: 'rgba(255,255,255,0.25)' }}>
+            style={{ color: 'color-mix(in srgb, var(--ink) 90%, transparent)', background: 'color-mix(in srgb, var(--ink) 12%, transparent)', borderColor: 'color-mix(in srgb, var(--ink) 25%, transparent)' }}>
             🗓️ Weekly View
           </span>
           <h1 className="font-display font-bold text-3xl mt-2 hero-gradient-text">7-Day Tide Planner</h1>
-          <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.72)' }}>
+          <p className="mt-1 text-sm" style={{ color: 'color-mix(in srgb, var(--ink) 72%, transparent)' }}>
             Plan operations across the week — at a glance
           </p>
         </div>
@@ -118,7 +118,7 @@ export default function WeeklyPage() {
           </div>
           <button onClick={() => setWeekStart(getMondayOf(todayUTCStr()))}
             className="px-3 py-2 rounded-lg text-xs font-mono font-semibold hover:opacity-80"
-            style={{ background: 'rgba(10,150,150,0.14)', border: '1px solid rgba(10,150,150,0.32)', color: '#0DC8C8' }}>
+            style={{ background: 'color-mix(in srgb, var(--g1) 14%, transparent)', border: '1px solid color-mix(in srgb, var(--g1) 32%, transparent)', color: 'var(--g1)' }}>
             This Week
           </button>
         </div>
@@ -128,20 +128,20 @@ export default function WeeklyPage() {
           {weekDays.map(day => (
             <div key={day.dateStr}
               className="flex gap-4 px-4 py-3 items-start"
-              style={day.isToday ? { background: 'rgba(10,150,150,0.07)' } : {}}>
+              style={day.isToday ? { background: 'color-mix(in srgb, var(--g1) 7%, transparent)' } : {}}>
 
               {/* Day label */}
               <div className="w-16 flex-shrink-0">
                 <div className="text-[10px] font-mono font-bold uppercase tracking-wide"
-                  style={{ color: day.isToday ? '#0DC8C8' : 'var(--text-muted)' }}>
+                  style={{ color: day.isToday ? 'var(--g1)' : 'var(--text-muted)' }}>
                   {day.dayName}
                 </div>
                 <div className="text-sm font-display font-semibold"
-                  style={{ color: day.isToday ? '#0DC8C8' : 'var(--text-primary)' }}>
+                  style={{ color: day.isToday ? 'var(--g1)' : 'var(--text-primary)' }}>
                   {day.label}
                 </div>
                 {day.isToday && (
-                  <div className="text-[9px] font-mono font-bold mt-0.5" style={{ color: '#0DC8C8' }}>TODAY</div>
+                  <div className="text-[9px] font-mono font-bold mt-0.5" style={{ color: 'var(--g1)' }}>TODAY</div>
                 )}
               </div>
 
@@ -157,16 +157,16 @@ export default function WeeklyPage() {
               <div className="flex flex-wrap gap-x-5 gap-y-1 flex-1 pt-0.5">
                 {day.hw.map((e, i) => (
                   <span key={`hw${i}`} className="flex items-center gap-1.5 text-xs font-mono whitespace-nowrap">
-                    <span className="font-bold" style={{ color: '#f59e0b' }}>HW</span>
+                    <span className="font-bold" style={{ color: 'var(--accent-hw)' }}>HW</span>
                     <span style={{ color: 'var(--text-primary)' }}>{toIST(e.time, timeFormat)}</span>
-                    <span style={{ color: '#f59e0b' }}>{e.height.toFixed(2)}m</span>
+                    <span style={{ color: 'var(--accent-hw)' }}>{e.height.toFixed(2)}m</span>
                   </span>
                 ))}
                 {day.lw.map((e, i) => (
                   <span key={`lw${i}`} className="flex items-center gap-1.5 text-xs font-mono whitespace-nowrap">
-                    <span className="font-bold" style={{ color: '#38bdf8' }}>LW</span>
+                    <span className="font-bold" style={{ color: 'var(--accent-lw)' }}>LW</span>
                     <span style={{ color: 'var(--text-primary)' }}>{toIST(e.time, timeFormat)}</span>
-                    <span style={{ color: '#38bdf8' }}>{e.height.toFixed(2)}m</span>
+                    <span style={{ color: 'var(--accent-lw)' }}>{e.height.toFixed(2)}m</span>
                   </span>
                 ))}
               </div>

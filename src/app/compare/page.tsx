@@ -11,16 +11,16 @@ import type { HWLWEvent } from '@/lib/tideEngine'
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const PHASE_STYLE: Record<string, { color: string; bg: string }> = {
-  'Spring':       { color: '#f59e0b', bg: 'rgba(245,158,11,0.12)'  },
-  'Near Spring':  { color: '#fb923c', bg: 'rgba(251,146,60,0.12)'  },
-  'Intermediate': { color: '#0DC8C8', bg: 'rgba(10,150,150,0.10)'  },
-  'Near Neap':    { color: '#38bdf8', bg: 'rgba(56,189,248,0.10)'  },
-  'Neap':         { color: '#818cf8', bg: 'rgba(129,140,248,0.10)' },
+  'Spring':       { color: 'var(--accent-hw)', bg: 'color-mix(in srgb, var(--accent-hw) 12%, transparent)'  },
+  'Near Spring':  { color: 'var(--spark)', bg: 'color-mix(in srgb, var(--spark) 12%, transparent)'  },
+  'Intermediate': { color: 'var(--g1)', bg: 'color-mix(in srgb, var(--g1) 10%, transparent)'  },
+  'Near Neap':    { color: 'var(--accent-lw)', bg: 'color-mix(in srgb, var(--accent-lw) 10%, transparent)'  },
+  'Neap':         { color: 'var(--g3)', bg: 'color-mix(in srgb, var(--g3) 10%, transparent)' },
 }
 
 // Port A = teal, Port B = indigo/purple
-const COLOR_A = '#0A9696'
-const COLOR_B = '#818cf8'
+const COLOR_A = 'var(--g1)'
+const COLOR_B = 'var(--g3)'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -46,10 +46,10 @@ function EventList({ events, color, timeFormat }: {
         const isHW = ev.type === 'HW'
         return (
           <div key={i} className="flex items-center justify-between py-2 px-3 rounded-xl"
-            style={{ background: isHW ? 'rgba(245,158,11,0.08)' : 'rgba(56,189,248,0.08)' }}>
+            style={{ background: isHW ? 'color-mix(in srgb, var(--accent-hw) 8%, transparent)' : 'color-mix(in srgb, var(--accent-lw) 8%, transparent)' }}>
             <div className="flex items-center gap-2">
               <span className="text-xs font-mono font-bold"
-                style={{ color: isHW ? '#f59e0b' : '#38bdf8' }}>
+                style={{ color: isHW ? 'var(--accent-hw)' : 'var(--accent-lw)' }}>
                 {isHW ? '▲ HW' : '▼ LW'}
               </span>
               <span className="text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
@@ -120,11 +120,11 @@ export default function ComparePage() {
       <div className="ocean-bg py-10">
         <div className="container-tp">
           <span className="section-tag mb-3"
-            style={{ color: 'rgba(255,255,255,0.90)', background: 'rgba(255,255,255,0.12)', borderColor: 'rgba(255,255,255,0.25)' }}>
+            style={{ color: 'color-mix(in srgb, var(--ink) 90%, transparent)', background: 'color-mix(in srgb, var(--ink) 12%, transparent)', borderColor: 'color-mix(in srgb, var(--ink) 25%, transparent)' }}>
             ⚡ Compare
           </span>
           <h1 className="font-display font-bold text-3xl mt-2 hero-gradient-text">Port Comparison</h1>
-          <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.72)' }}>
+          <p className="mt-1 text-sm" style={{ color: 'color-mix(in srgb, var(--ink) 72%, transparent)' }}>
             Side-by-side tidal analysis for two Indian ports
           </p>
         </div>
@@ -172,7 +172,7 @@ export default function ComparePage() {
             {dateLabel}
           </span>
           <span className="text-xs font-mono font-semibold px-3 py-1 rounded-full"
-            style={{ background: ps.bg, color: ps.color, border: `1px solid ${ps.color}35` }}>
+            style={{ background: ps.bg, color: ps.color, border: `1px solid color-mix(in srgb, ${ps.color} 21%, transparent)` }}>
             {phase} Tide
           </span>
           {avgPeakA > 0 && avgPeakB > 0 && (
@@ -221,7 +221,7 @@ export default function ComparePage() {
                 labelStyle={{ color: 'var(--text-muted)' }}
               />
               <Area type="monotone" dataKey="a" stroke={COLOR_A} strokeWidth={2.5}
-                fill="url(#cmpGradA)" dot={false} activeDot={{ r: 4, fill: '#0DC8C8', stroke: 'none' }} />
+                fill="url(#cmpGradA)" dot={false} activeDot={{ r: 4, fill: 'var(--g1)', stroke: 'none' }} />
               <Area type="monotone" dataKey="b" stroke={COLOR_B} strokeWidth={2}
                 fill="url(#cmpGradB)" dot={false} activeDot={{ r: 4, fill: COLOR_B, stroke: 'none' }} />
             </AreaChart>
@@ -242,7 +242,7 @@ export default function ComparePage() {
                 Spring {portA.springRange} m
               </span>
             </div>
-            <EventList events={eventsA} color="#0DC8C8" timeFormat={timeFormat} />
+            <EventList events={eventsA} color="var(--g1)" timeFormat={timeFormat} />
             <p className="font-mono text-[10px] mt-3" style={{ color: 'var(--text-muted)', opacity: 0.7 }}>
               MHWS {portA.mhws} m · MLWS {portA.mlws} m
             </p>

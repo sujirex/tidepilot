@@ -12,11 +12,11 @@ const MONTH_NAMES = [
 ]
 
 const PHASE_STYLE: Record<string, { color: string; dot: string }> = {
-  'Spring':       { color: '#f59e0b', dot: '#f59e0b' },
-  'Near Spring':  { color: '#fb923c', dot: '#fb923c' },
-  'Intermediate': { color: '#0DC8C8', dot: '#0DC8C8' },
-  'Near Neap':    { color: '#38bdf8', dot: '#38bdf8' },
-  'Neap':         { color: '#818cf8', dot: '#818cf8' },
+  'Spring':       { color: 'var(--accent-hw)', dot: 'var(--accent-hw)' },
+  'Near Spring':  { color: 'var(--spark)', dot: 'var(--spark)' },
+  'Intermediate': { color: 'var(--g1)', dot: 'var(--g1)' },
+  'Near Neap':    { color: 'var(--accent-lw)', dot: 'var(--accent-lw)' },
+  'Neap':         { color: 'var(--g3)', dot: 'var(--g3)' },
 }
 
 function todayIST(): { year: number; month: number; day: number } {
@@ -67,11 +67,11 @@ export default function MonthlyPage() {
       <div className="ocean-bg py-10">
         <div className="container-tp">
           <span className="section-tag mb-3"
-            style={{ color: 'rgba(255,255,255,0.90)', background: 'rgba(255,255,255,0.12)', borderColor: 'rgba(255,255,255,0.25)' }}>
+            style={{ color: 'color-mix(in srgb, var(--ink) 90%, transparent)', background: 'color-mix(in srgb, var(--ink) 12%, transparent)', borderColor: 'color-mix(in srgb, var(--ink) 25%, transparent)' }}>
             MONTHLY VIEW
           </span>
           <h1 className="font-display font-bold text-3xl mt-2 hero-gradient-text">Monthly Tide Table</h1>
-          <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.72)' }}>
+          <p className="mt-1 text-sm" style={{ color: 'color-mix(in srgb, var(--ink) 72%, transparent)' }}>
             Complete HW &amp; LW schedule for any month
           </p>
         </div>
@@ -102,16 +102,16 @@ export default function MonthlyPage() {
           </div>
           <button onClick={() => { setYear(today.year); setMonth(today.month) }}
             className="px-3 py-2 rounded-lg text-xs font-mono font-semibold hover:opacity-80"
-            style={{ background: 'rgba(10,150,150,0.14)', border: '1px solid rgba(10,150,150,0.32)', color: '#0DC8C8' }}>
+            style={{ background: 'color-mix(in srgb, var(--g1) 14%, transparent)', border: '1px solid color-mix(in srgb, var(--g1) 32%, transparent)', color: 'var(--g1)' }}>
             This Month
           </button>
         </div>
 
         <div className="grid grid-cols-3 gap-3">
           {([
-            { label: 'Peak HW',     value: peakHW.toFixed(2) + ' m',   color: '#f59e0b' },
-            { label: 'Lowest LW',   value: lowestLW.toFixed(2) + ' m', color: '#38bdf8' },
-            { label: 'Spring Days', value: String(springDays),          color: '#0DC8C8' },
+            { label: 'Peak HW',     value: peakHW.toFixed(2) + ' m',   color: 'var(--accent-hw)' },
+            { label: 'Lowest LW',   value: lowestLW.toFixed(2) + ' m', color: 'var(--accent-lw)' },
+            { label: 'Spring Days', value: String(springDays),          color: 'var(--g1)' },
           ] as const).map(stat => (
             <div key={stat.label} className="glass-card p-3 text-center">
               <div className="text-xl font-display font-bold" style={{ color: stat.color }}>{stat.value}</div>
@@ -127,21 +127,21 @@ export default function MonthlyPage() {
                 <tr style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg-card)' }}>
                   <th className="px-3 py-2.5 text-left font-mono" style={{ color: 'var(--text-muted)' }}>Date</th>
                   <th className="px-3 py-2.5 text-left font-mono" style={{ color: 'var(--text-muted)' }}>Phase</th>
-                  <th className="px-3 py-2.5 text-left font-mono" style={{ color: '#f59e0b' }}>High Water</th>
-                  <th className="px-3 py-2.5 text-left font-mono" style={{ color: '#38bdf8' }}>Low Water</th>
+                  <th className="px-3 py-2.5 text-left font-mono" style={{ color: 'var(--accent-hw)' }}>High Water</th>
+                  <th className="px-3 py-2.5 text-left font-mono" style={{ color: 'var(--accent-lw)' }}>Low Water</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map(row => (
                   <tr key={row.dayNum}
-                    style={{ borderBottom: '1px solid var(--border)', background: row.isToday ? 'rgba(10,150,150,0.07)' : 'transparent' }}>
+                    style={{ borderBottom: '1px solid var(--border)', background: row.isToday ? 'color-mix(in srgb, var(--g1) 7%, transparent)' : 'transparent' }}>
                     <td className="px-3 py-2 whitespace-nowrap">
                       <span className="font-mono font-bold"
-                        style={{ color: row.isToday ? '#0DC8C8' : 'var(--text-primary)' }}>
+                        style={{ color: row.isToday ? 'var(--g1)' : 'var(--text-primary)' }}>
                         {String(row.dayNum).padStart(2, '0')}
                       </span>
                       <span className="ml-1.5 font-mono" style={{ color: 'var(--text-muted)' }}>{row.dayName}</span>
-                      {row.isToday && <span className="ml-1.5 text-[9px] font-mono font-bold" style={{ color: '#0DC8C8' }}>TODAY</span>}
+                      {row.isToday && <span className="ml-1.5 text-[9px] font-mono font-bold" style={{ color: 'var(--g1)' }}>TODAY</span>}
                     </td>
                     <td className="px-3 py-2 whitespace-nowrap">
                       <span className="inline-flex items-center gap-1.5">
@@ -154,7 +154,7 @@ export default function MonthlyPage() {
                         {row.hw.map((e, i) => (
                           <span key={i} className="font-mono whitespace-nowrap" style={{ color: 'var(--text-primary)' }}>
                             {toIST(e.time, timeFormat)}{' '}
-                            <span style={{ color: '#f59e0b' }}>{e.height.toFixed(2)}m</span>
+                            <span style={{ color: 'var(--accent-hw)' }}>{e.height.toFixed(2)}m</span>
                           </span>
                         ))}
                       </div>
@@ -164,7 +164,7 @@ export default function MonthlyPage() {
                         {row.lw.map((e, i) => (
                           <span key={i} className="font-mono whitespace-nowrap" style={{ color: 'var(--text-primary)' }}>
                             {toIST(e.time, timeFormat)}{' '}
-                            <span style={{ color: '#38bdf8' }}>{e.height.toFixed(2)}m</span>
+                            <span style={{ color: 'var(--accent-lw)' }}>{e.height.toFixed(2)}m</span>
                           </span>
                         ))}
                       </div>
